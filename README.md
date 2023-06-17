@@ -20,3 +20,8 @@ I also learn through udemy courses and of coarse youtube and there are some grea
 I was inspired by javidx9. In his film it looks pretty easy, but I know for sure that it took him a little longer to make the project and the great film !!!!  
 https://www.youtube.com/@javidx9
 https://www.youtube.com/watch?v=QgDR8LrRZhk
+
+# Screenshots
+
+<img src="Screenshot1.png" width="640" height="360">
+<img src="Screenshot2.png" width="640" height="360">
