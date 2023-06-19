@@ -24,7 +24,7 @@ var keyRight = false;
 var keyUp = false;
 var keySpace = false;
 var requestShoot = false;
-var requestHyperjump = true;
+var requestHyperjump = false;
 
 // Game level and score
 var level = 1;
@@ -196,7 +196,8 @@ function createShips()
     // Create the wrappable alienShip
     alienShip = GameEngine.createSpaceObject(gameParent, "AlienShip.qml");
     GameEngine.doResetObjectPositionToCenter(alienShip, gameAreaMaxX, gameAreaMaxY);
-    alienShip.objectPosX += 100;    alienShip.objectHidden = true;
+    alienShip.objectPosX += 100;
+    alienShip.objectHidden = true;
     alienShip.objectHidden = true;
     alienShip.doInit();
     alienShip.doRedraw();
@@ -246,10 +247,10 @@ function createAsteroids(count, sizeFactor)
         var index = asteroids.length
         asteroids[index] = GameEngine.createSpaceObject(gameParent, "Asteroid.qml");
         GameEngine.doResetObjectPositionToRandomPosition(asteroids[index], gameAreaMaxX, gameAreaMaxY);
-        var speedXY = 0.05 * (Math.min(level,3) - 1) + (8 - sizeFactor) * 0.025;
-        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(0.3, 1 + speedXY);
-        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(0.3, 1 + speedXY);
-        asteroids[index].objectSpeedRotation = GameEngine.getRandomSpeed(0.1, 0.3);
+        var speedXY = 5 * (Math.min(level,3) - 1) + (8 - sizeFactor) * 2.5;
+        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(30, 100 + speedXY);
+        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(0.3, 100 + speedXY);
+        asteroids[index].objectSpeedRotation = GameEngine.getRandomSpeed(10, 30);
         asteroids[index].objectSizeMultiplier = sizeFactor;
         asteroids[index].doInit();
         asteroids[index].doRedraw();
@@ -280,8 +281,8 @@ function createBullet()
     bullet.objectPosX = spaceShip.objectPosX;
     bullet.objectPosY = spaceShip.objectPosY;
     bullet.objectBearing = spaceShip.objectBearing;
-    bullet.objectSpeedX =  (bullet.bulletSpeed * 10 / 1000) * Math.sin(bullet.objectBearing * Math.PI/180);
-    bullet.objectSpeedY = -(bullet.bulletSpeed * 10 / 1000) * Math.cos(bullet.objectBearing * Math.PI/180);
+    bullet.objectSpeedX =  1000 * Math.sin(bullet.objectBearing * Math.PI/180);
+    bullet.objectSpeedY = -1000 * Math.cos(bullet.objectBearing * Math.PI/180);
     bullet.objectSizeMultiplier = 50;
     //console.log(bullet.objectType + bullets.length + " created: " + bullet.objectSpeedX + "/" + bullet.objectSpeedY);
     bullet.doInit();
@@ -439,12 +440,12 @@ function onBulletHits(bullet)
 // Object movement over time
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function doPositionAdjust(object, objectWrap)
+function doPositionAdjust(object, objectWrap, millis)
 {
     if (object === null) return;
-    object.objectPosX += object.objectSpeedX;
-    object.objectPosY += object.objectSpeedY;
-    object.objectBearing += object.objectSpeedRotation;
+    object.objectPosX += object.objectSpeedX * millis / 1000;
+    object.objectPosY += object.objectSpeedY * millis / 1000;
+    object.objectBearing += object.objectSpeedRotation * millis / 1000;
 
     // Wrap coordinates
     if ( objectWrap !== null)
@@ -472,11 +473,11 @@ function spawnNewAsteroids(asteroid)
     {
         var index = asteroids.length;
         asteroids[index] = GameEngine.createSpaceObject(gameParent, "Asteroid.qml");
-        var speedXY = 0.5 * (level - 1);
+        var speedXY = 50 * (level - 1);
         asteroids[index].objectPosX = asteroid.objectPosX;
         asteroids[index].objectPosY = asteroid.objectPosY;
-        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(0.5, 1 + speedXY);
-        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(0.5, 1 + speedXY);
+        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(50, 100 + speedXY);
+        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(50, 100 + speedXY);
         asteroids[index].objectSpeedRotation = GameEngine.getRandomSpeed(0.1 * level, 0.2 * level);
         asteroids[index].objectSizeMultiplier = asteroid.objectSizeMultiplier/2;
         asteroids[index].doInit();
@@ -491,8 +492,8 @@ function spawnAsteroidDebris(asteroid)
     {
         var index = debris.length;
         debris[index] = GameEngine.createSpaceObject(gameParent, "Debris.qml");
-        debris[index].objectSpeedX = GameEngine.getRandomSpeed(0.2, 0.5);
-        debris[index].objectSpeedY = GameEngine.getRandomSpeed(0.2, 0.5);
+        debris[index].objectSpeedX = GameEngine.getRandomSpeed(20, 50);
+        debris[index].objectSpeedY = GameEngine.getRandomSpeed(20, 50);
         debris[index].objectPosX = asteroid.objectPosX;
         debris[index].objectPosY = asteroid.objectPosY;
         debris[index].objectSizeMultiplier = 1;
@@ -509,9 +510,9 @@ function spawnShipDebris(ship)
     {
         var index = debris.length;
         debris[index] = GameEngine.createSpaceObject(gameParent, "Debris.qml");
-        debris[index].objectSpeedX = GameEngine.getRandomSpeed(0, 3);
-        debris[index].objectSpeedY = GameEngine.getRandomSpeed(0, 3);
-        debris[index].objectSpeedRotation = GameEngine.getRandomSpeed(-3, 3);
+        debris[index].objectSpeedX = GameEngine.getRandomSpeed(0, 300);
+        debris[index].objectSpeedY = GameEngine.getRandomSpeed(0, 300);
+        debris[index].objectSpeedRotation = GameEngine.getRandomSpeed(-300, 300);
         debris[index].objectPosX = ship.objectPosX;
         debris[index].objectPosY = ship.objectPosY;
         debris[index].objectSizeMultiplier = GameEngine.getRandomSpeed(5, 20);
@@ -546,8 +547,8 @@ function doAlienShipHandling()
             alienShip.objectPosX = gameAreaMaxX - alienShip.objectSizePixelScaled/2;
             alienShip.objectPosY = GameEngine.getRandomValue(0 + alienShip.objectSizePixelScaled/2,
                                                              gameAreaMaxY - alienShip.objectSizePixelScaled/2);
-            alienShip.objectSpeedX = -0.5;
-            alienShip.objectSpeedY = GameEngine.getRandomValue(-0.3,0.3);
+            alienShip.objectSpeedX = -50;
+            alienShip.objectSpeedY = GameEngine.getRandomValue(-30,30);
             alienShip.objectHidden = false;
             GameEngine.doWrapCoordinates(alienShip, alienShipWrap, gameAreaMaxX, gameAreaMaxY);
             resetTimerNextAlienShipVisibility();
@@ -590,9 +591,9 @@ function createAlienBullet()
     bullet.objectPosY = alienShip.objectPosY;
     bullet.objectBearing = Math.atan2( (spaceShip.objectPosX - alienShip.objectPosX), -(spaceShip.objectPosY - alienShip.objectPosY))
             * 180 / Math.PI;
-    var tmpSpeed = 1 + Math.min(level, 3) * 0.2; // Bullet speed increase per level (must be faster than ship)
-    bullet.objectSpeedX =  (bullet.bulletSpeed * tmpSpeed / 1000) * Math.sin(bullet.objectBearing * Math.PI/180);
-    bullet.objectSpeedY = -(bullet.bulletSpeed * tmpSpeed / 1000) * Math.cos(bullet.objectBearing * Math.PI/180);
+    var tmpSpeed = 60 + Math.min(level, 3) * 20; // Bullet speed increase per level (must be faster than ship)
+    bullet.objectSpeedX =  tmpSpeed * Math.sin(bullet.objectBearing * Math.PI/180);
+    bullet.objectSpeedY = -tmpSpeed * Math.cos(bullet.objectBearing * Math.PI/180);
     bullet.objectSizeMultiplier = 30;
     bullet.objectLifetimeMs = 4000 + (2000 * level); // Bullet radius increase per level (limit is screen)
     //console.log(bullet.objectType + bullets.length + " created: " + bullet.objectSpeedX + "/" + bullet.objectSpeedY);
@@ -610,7 +611,7 @@ function doFastTimerLoop()
     var timeNow = Date.now();
     var millis = timeNow - gameTimeStampMs;
     gameTimeStampMs = timeNow;
-    //console.log("time = " + timeNow + ", diff = " + timeDiff);
+    //console.log("time = " + timeNow + ", diff = " + millis);
 
     if (pause) return;
     if (spaceShip !== null)
@@ -626,18 +627,18 @@ function doFastTimerLoop()
         {
             spaceShip.objectSpeedX +=  (spaceShip.shipAcceleration * millis/1000) * Math.sin(spaceShip.objectBearing * Math.PI/180);
             spaceShip.objectSpeedY += -(spaceShip.shipAcceleration * millis/1000) * Math.cos(spaceShip.objectBearing * Math.PI/180);
-            spaceShip.objectSpeedX = GameEngine.limitMinMax(spaceShip.objectSpeedX, -10, 10);
-            spaceShip.objectSpeedY = GameEngine.limitMinMax(spaceShip.objectSpeedY, -10, 10);
+            spaceShip.objectSpeedX = GameEngine.limitMinMax(spaceShip.objectSpeedX, -1000, 1000);
+            spaceShip.objectSpeedY = GameEngine.limitMinMax(spaceShip.objectSpeedY, -1000, 1000);
         }
     }
 
     // Move the ship, bullets and asteroids
-    doPositionAdjust(spaceShip, spaceShipWrap);
-    doPositionAdjust(alienShip, alienShipWrap);
-    bullets.forEach( element => doPositionAdjust(element, null) );
-    alienbullets.forEach( element => doPositionAdjust(element, null) );
-    asteroids.forEach( (element,index) => doPositionAdjust(element, asteroidsWrap[index]) );
-    debris.forEach( element => doPositionAdjust(element, null) );
+    doPositionAdjust(spaceShip, spaceShipWrap, millis);
+    doPositionAdjust(alienShip, alienShipWrap, millis);
+    bullets.forEach( element => doPositionAdjust(element, null, millis) );
+    alienbullets.forEach( element => doPositionAdjust(element, null, millis) );
+    asteroids.forEach( (element,index) => doPositionAdjust(element, asteroidsWrap[index], millis) );
+    debris.forEach( element => doPositionAdjust(element, null, millis) );
 
     // Shoot bullets
     if (spaceShip !== null && !spaceShip.objectHidden)

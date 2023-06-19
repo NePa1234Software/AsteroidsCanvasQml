@@ -82,7 +82,7 @@ Rectangle {
 
     Timer {
         id: timer
-        interval: 10
+        interval: 16
         repeat: true
         running: false
         onTriggered: {

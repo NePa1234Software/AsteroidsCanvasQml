@@ -8,19 +8,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 6.2 COMPONENTS Quick Qml REQUIRED)
 
 qt_add_executable(appAsteroidsQml
-    src/main.cpp
+    main.cpp
 )
 
-qt_add_qml_module(appAsteroidsQml
-    URI AsteroidsQml
-    VERSION 1.0
-    QML_FILES
-    src/main.qml src/OuterSpace.qml
-    src/Asteroid.qml src/AsteroidsSplashScreen.qml src/PlayerStatusBar.qml
-    src/SpaceShip.qml src/Debris.qml src/Bullet.qml src/SpaceObject.qml
-    src/AlienShip.qml
-    src/gameEngine.js src/gameAsteroids.js
-)
+add_subdirectory(modules)
 
 set_target_properties(appAsteroidsQml PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -31,7 +22,7 @@ set_target_properties(appAsteroidsQml PROPERTIES
 )
 
 target_link_libraries(appAsteroidsQml
-    PRIVATE Qt6::Quick Qt6::Qml)
+    PRIVATE Qt6::Quick Qt6::Qml moduleAsteroidsQmlplugin)
 
 install(TARGETS appAsteroidsQml
     BUNDLE DESTINATION .

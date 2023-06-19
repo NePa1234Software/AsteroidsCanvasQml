@@ -6,7 +6,7 @@ SpaceObject {
     id: spaceShip
 
     property real shipTurnSpeed: 0.5    // full turns per second
-    property real shipAcceleration: 10.0
+    property real shipAcceleration: 1000.0
     property bool shipThrust: false
 
     onShipThrustChanged: doRedraw()

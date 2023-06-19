@@ -10,8 +10,6 @@ SpaceObject {
     objectSizePixel: 2
     objectColor: "yellow"
 
-    property int bulletSpeed: 1000
-
     // Specific object drawing after translation to center and rotation has occured
     // Save and restore of drawing context is done before and after this call
     // line coloring and width is already set
