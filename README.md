@@ -1,4 +1,6 @@
 # AsteroidsCanvasQml
+
+<img src="docs/Recording_AsteroidsCanvasQML_2023-06-23 204138.gif" width="640" height="360">
 Asteroid retro game written solely for me (and you) to learn the QML (expecially the Canvas Item).
 
 Currently I am learning QML (from the amazing Qt Framework). 
@@ -30,4 +32,3 @@ https://www.youtube.com/watch?v=QgDR8LrRZhk
 # Screenshots
 <img src="docs/Screenshot1.png" width="640" height="360">
 <img src="docs/Screenshot2.png" width="640" height="360">
-![](docs/Recording_AsteroidsCanvasQML_2023-06-23 204138.gif)
