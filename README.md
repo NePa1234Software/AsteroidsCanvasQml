@@ -7,7 +7,7 @@ Currently I am learning QML (from the amazing Qt Framework).
 I plan to add some better graphic to practice more Canvas API. An installer or at least a portable deploy will come. 
 When I learn other graphical modules I plan to clone this project to cleary differentiate the concepts.
 
-Project was built against Qt 6.4. 
+Project was built against Qt 6.5. 
 
 Author: Neil Parker
 
