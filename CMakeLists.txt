@@ -1,29 +1,33 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 
-project(AsteroidsCanvasQml VERSION 0.1 LANGUAGES CXX)
+project(AsteroidsCanvasQml VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Qt6 COMPONENTS Quick Qml Core REQUIRED)
 
-find_package(Qt6 6.2 COMPONENTS Quick Qml REQUIRED)
+qt_standard_project_setup()
+qt_add_executable(appAsteroidsQml main.cpp)
 
-qt_add_executable(appAsteroidsQml
-    main.cpp
+add_subdirectory(AsteroidsQml)
+
+set_target_properties(appAsteroidsQml PROPERTIES WIN32_EXECUTABLE TRUE)
+
+target_link_libraries(appAsteroidsQml PRIVATE Qt6::Quick Qt6::Qml moduleAsteroidsQmlplugin)
+
+# -----------------------------------------------------------
+# installation using windeployqt
+# cd <build folder>
+# C:\Qt\Tools\CMake_64\bin\cmake --install . --config Release --prefix %CD%\portable
+# -----------------------------------------------------------
+
+qt_generate_deploy_qml_app_script(
+    TARGET appAsteroidsQml
+    OUTPUT_SCRIPT deploy_script # from qt 6.5
+    FILENAME_VARIABLE deploy_script
 )
-
-add_subdirectory(modules)
-
-set_target_properties(appAsteroidsQml PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
-
-target_link_libraries(appAsteroidsQml
-    PRIVATE Qt6::Quick Qt6::Qml moduleAsteroidsQmlplugin)
 
 install(TARGETS appAsteroidsQml
     BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(SCRIPT ${deploy_script})
