@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>AsteroidsCanvasQml</Name>
+    <Version>1.0</Version>
+    <Title>Thankyou for installing my very first QML game !! Lets move on to - </Title>
+    <Publisher>NePa1234Software</Publisher>
+    <ProductUrl>https://github.com/NePa1234Software/AsteroidsCanvasQml</ProductUrl>
+    <!-- Directory name is used in component.xml -->
+    <StartMenuDir>NePa1234Software</StartMenuDir>
+    <TargetDir>@ApplicationsDirX64@/Nepa1234Software/AsteroidsCanvasQml</TargetDir>
+</Installer>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>AsteroidsCanvasQML (requires license agreement)</DisplayName>
+    <Description>AsteroidsCanvasQML can only be installed if the user agrees to the licenses.</Description>
+    <Version>1.0</Version>
+    <ReleaseDate>2023-06-25</ReleaseDate>
+    <Licenses>
+        <License name="GNU GENERAL PUBLIC LICENSE Version 3" file="LICENSE"/>
+    </Licenses>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+</Package>
