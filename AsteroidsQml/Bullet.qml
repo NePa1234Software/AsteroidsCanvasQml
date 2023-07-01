@@ -5,10 +5,11 @@ SpaceObject {
 
     id: bullet
 
-    // Override the object image
-    objectType: "bullet"
-    objectSizePixel: 2
-    objectColor: "yellow"
+    // Specialize the object state
+    objectState.objectType: "bullet"
+    objectState.objectSizePixel: 2
+    objectState.objectColor: "yellow"
+    objectState.objectFillColor: "red"
 
     // Specific object drawing after translation to center and rotation has occured
     // Save and restore of drawing context is done before and after this call
@@ -16,17 +17,17 @@ SpaceObject {
     onDrawObjectSignal: (ctx)=> {
 
         // Bullet is just a dot (or like a lazer shot)
-        ctx.fillRect(-objectSizePixel, -objectSizePixel * objectSizeMultiplier / 2,
-                      objectSizePixel,  objectSizePixel * objectSizeMultiplier / 2);
+        ctx.fillRect(-objectState.objectSizePixel, -objectState.objectHalfWidth,
+                      objectState.objectSizePixel,  objectState.objectHalfWidth);
     }
 
     Timer {
         id: timerId
         repeat: false
-        interval: bullet.objectLifetimeMs
-        running: bullet.objectLifetimeMs > 0
+        interval: bullet.objectState.objectLifetimeMs
+        running: bullet.objectState.objectLifetimeMs > 0
         onTriggered: {
-            bullet.objectDestroy = true;
+            bullet.objectState.objectDestroy = true;
         }
     }
 }

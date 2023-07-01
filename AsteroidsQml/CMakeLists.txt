@@ -9,9 +9,9 @@ qt_add_qml_module(moduleAsteroidsQml
     VERSION 1.0
     # OUTPUT_DIRECTORY /AsteroidsQml
     QML_FILES
-    main.qml OuterSpace.qml
+    main.qml OuterSpace.qml TestArea.qml
     Asteroid.qml AsteroidsSplashScreen.qml PlayerStatusBar.qml
-    SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml
-    AlienShip.qml
+    SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml ObjectState.qml
+    AlienShip.qml UltiStatus.qml WeaponInterface.qml CannonInterface.qml
     gameEngine.js gameAsteroids.js
 )

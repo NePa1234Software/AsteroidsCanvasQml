@@ -44,7 +44,7 @@ Item {
                   "<h1><i> (https://www.qt.io/)</i></h1>" +
                   "<br>" +
                   "<h2> Controls: UP to thrust, LEFT, RIGHT, SPACE to Fire</h2>" +
-                  "<h2>           DOWN to hyperjump, P to pause</h2>"
+                  "<h2> DOWN to hyperjump (and to activate the ulti), P to pause</h2>"
             color: "black"
         }
     }

@@ -95,10 +95,10 @@ function resetLevel()
 function increaseScore(object)
 {
     var prevScore = score;
-    console.log(object.objectType + " hit - size " + object.objectSizeMultiplier);
-    if (object.objectType === "asteroid")
+    console.log(object.objectState.objectType + " hit - size " + object.objectState.objectSizeMultiplier);
+    if (object.objectState.objectType === "asteroid")
     {
-        switch(object.objectSizeMultiplier)
+        switch(object.objectState.objectSizeMultiplier)
         {
         case 8:
             score += 10;
@@ -117,7 +117,7 @@ function increaseScore(object)
             break;
         }
     }
-    else if (object.objectType === "alienShip")
+    else if (object.objectState.objectType === "alienShip")
     {
         // Ship gets bettwe each level, so the reward is higher
         score += 200 * level;
@@ -138,7 +138,7 @@ function doGameLevelHandling()
     if (gameOver) return;  // Wait for manual reset of game
 
     // Ship destroyed?
-    if (spaceShip.objectHidden)
+    if (spaceShip.objectState.objectHidden)
     {
         // Wait for debris to leave the screen
         if (debris.length == 0 && bullets.length == 0 && alienbullets.length == 0)
@@ -160,14 +160,14 @@ function doGameLevelHandling()
 function doHyperjump()
 {
     if (spaceShip === null) return;
-    spaceShip.objectHidden = true;
-    spaceShip.objectPosX = GameEngine.getRandomValue(0 + spaceShip.objectSizePixelScaled/2,
-                                                     gameAreaMaxX - spaceShip.objectSizePixelScaled/2);
-    spaceShip.objectPosY = GameEngine.getRandomValue(0 + spaceShip.objectSizePixelScaled/2,
-                                                     gameAreaMaxY - spaceShip.objectSizePixelScaled/2);
-    spaceShip.objectSpeedX = 0;
-    spaceShip.objectSpeedY = 0;
-    spaceShip.objectHidden = false;
+    spaceShip.objectState.objectHidden = true;
+    spaceShip.objectState.objectPosX = GameEngine.getRandomValue(0 + spaceShip.objectState.objectSizePixelScaled/2,
+                                                     gameAreaMaxX - spaceShip.objectState.objectSizePixelScaled/2);
+    spaceShip.objectState.objectPosY = GameEngine.getRandomValue(0 + spaceShip.objectState.objectSizePixelScaled/2,
+                                                     gameAreaMaxY - spaceShip.objectState.objectSizePixelScaled/2);
+    spaceShip.objectState.objectSpeedX = 0;
+    spaceShip.objectState.objectSpeedY = 0;
+    spaceShip.objectState.objectHidden = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +188,7 @@ function createShips()
     // Create the wrappable spaceShip
     spaceShip = GameEngine.createSpaceObject(gameParent, "SpaceShip.qml");
     GameEngine.doResetObjectPositionToCenter(spaceShip, gameAreaMaxX, gameAreaMaxY);
-    spaceShip.objectBearing = 45;
+    spaceShip.objectState.objectBearing = 45;
     spaceShip.doInit();
     spaceShip.doRedraw();
     spaceShipWrap = GameEngine.createWrapObject(spaceShip, "SpaceShip.qml");
@@ -196,9 +196,9 @@ function createShips()
     // Create the wrappable alienShip
     alienShip = GameEngine.createSpaceObject(gameParent, "AlienShip.qml");
     GameEngine.doResetObjectPositionToCenter(alienShip, gameAreaMaxX, gameAreaMaxY);
-    alienShip.objectPosX += 100;
-    alienShip.objectHidden = true;
-    alienShip.objectHidden = true;
+    alienShip.objectState.objectPosX += 100;
+    alienShip.objectState.objectHidden = true;
+    alienShip.objectState.objectHidden = true;
     alienShip.doInit();
     alienShip.doRedraw();
     alienShipWrap = GameEngine.createWrapObject(alienShip, "AlienShip.qml");
@@ -248,10 +248,10 @@ function createAsteroids(count, sizeFactor)
         asteroids[index] = GameEngine.createSpaceObject(gameParent, "Asteroid.qml");
         GameEngine.doResetObjectPositionToRandomPosition(asteroids[index], gameAreaMaxX, gameAreaMaxY);
         var speedXY = 5 * (Math.min(level,3) - 1) + (8 - sizeFactor) * 2.5;
-        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(30, 100 + speedXY);
-        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(0.3, 100 + speedXY);
-        asteroids[index].objectSpeedRotation = GameEngine.getRandomSpeed(10, 30);
-        asteroids[index].objectSizeMultiplier = sizeFactor;
+        asteroids[index].objectState.objectSpeedX = GameEngine.getRandomSpeed(30, 100 + speedXY);
+        asteroids[index].objectState.objectSpeedY = GameEngine.getRandomSpeed(0.3, 100 + speedXY);
+        asteroids[index].objectState.objectSpeedRotation = GameEngine.getRandomSpeed(0.1, 0.3);
+        asteroids[index].objectState.objectSizeMultiplier = sizeFactor;
         asteroids[index].doInit();
         asteroids[index].doRedraw();
         asteroidsWrap[index] = GameEngine.createWrapObject(asteroids[index], "Asteroid.qml");
@@ -267,24 +267,32 @@ function destroyAsteroids()
 
 function createBulletsContainer()
 {
-    if (bullets === null) {
+    if (bullets == null) {
         bullets = new Array(0);
     }
-    if (alienbullets === null) {
+    if (alienbullets == null) {
         alienbullets = new Array(0);
     }
 }
 
-function createBullet()
+function createBullets()
+{
+    spaceShip.weapons.cannonList.forEach( cannon => createBullet(spaceShip, cannon) );
+}
+
+function createBullet( ship, cannon )
 {
     var bullet = GameEngine.createSpaceObject(gameParent, "Bullet.qml");
-    bullet.objectPosX = spaceShip.objectPosX;
-    bullet.objectPosY = spaceShip.objectPosY;
-    bullet.objectBearing = spaceShip.objectBearing;
-    bullet.objectSpeedX =  1000 * Math.sin(bullet.objectBearing * Math.PI/180);
-    bullet.objectSpeedY = -1000 * Math.cos(bullet.objectBearing * Math.PI/180);
-    bullet.objectSizeMultiplier = 50;
-    //console.log(bullet.objectType + bullets.length + " created: " + bullet.objectSpeedX + "/" + bullet.objectSpeedY);
+    bullet.objectState.objectBearing = ship.objectState.objectBearing + cannon.r_angle;
+    var result = GameEngine.rotateVectorAroundOrigin(
+                { x: ship.objectState.objectPosX, y: ship.objectState.objectPosY},
+                { x: cannon.r_x, y: cannon.r_y}, ship.objectState.objectBearing);
+    bullet.objectState.objectPosX = result.x;
+    bullet.objectState.objectPosY = result.y;
+    bullet.objectState.objectSpeedX =  1000 * Math.sin(bullet.objectState.objectBearing * Math.PI/180);
+    bullet.objectState.objectSpeedY = -1000 * Math.cos(bullet.objectState.objectBearing * Math.PI/180);
+    bullet.objectState.objectSizeMultiplier = 50;
+    //console.log(bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
     bullet.doInit();
     bullet.doRedraw();
     bullets[bullets.length] = bullet;
@@ -307,7 +315,7 @@ function cleanUpDestroyedWrappedObjects( objects, objectsWrap )
     var ii = 0;
     while ( ii < objects.length )
     {
-        if (objects[ii].objectDestroy)
+        if (objects[ii].objectState.objectDestroy || objectsWrap[ii].objectState.objectDestroy)
         {
             objects[ii].destroy();
             objects.splice(ii, 1);
@@ -326,7 +334,7 @@ function cleanUpDestroyedObjects( objects )
     var ii = 0;
     while ( ii < objects.length )
     {
-        if (objects[ii].objectDestroy)
+        if (objects[ii].objectState.objectDestroy)
         {
             objects[ii].destroy();
             objects.splice(ii, 1);
@@ -340,9 +348,10 @@ function cleanUpDestroyedObjects( objects )
 function cleanUpDestroyedObject( object )
 {
     // ToDo - what to do if this is the ship
-    if (object.objectDestroy)
+    if (object.objectState.objectDestroy)
     {
         object.destroy();
+        object = null;
     }
 }
 
@@ -363,14 +372,14 @@ function doCollisionDetectionGeneric(source, target, sourcefunc, targetfunc)
 {
     if (source === null) return;
     if (target === null) return;
-    if (source.objectHidden === true) return;
-    if (source.objectDesroyed === true) return;
-    if (target.objectHidden === true) return;
-    if (target.objectDesroyed === true) return;
+    if (source.objectState.objectHidden === true) return;
+    if (source.objectState.objectDesroyed === true) return;
+    if (target.objectState.objectHidden === true) return;
+    if (target.objectState.objectDesroyed === true) return;
 
-    if ( GameEngine.isPointInsideCircle( source.objectPosX, source.objectPosY,
-                                         source.objectSizePixelScaled/2 + target.objectSizePixelScaled/2,
-                                         target.objectPosX, target.objectPosY))
+    if ( GameEngine.isPointInsideCircle( source.objectState.objectPosX, source.objectState.objectPosY,
+                                         source.objectState.objectSizePixelScaled/2 + target.objectState.objectSizePixelScaled/2,
+                                         target.objectState.objectPosX, target.objectState.objectPosY))
     {
       // For additional effect, we do collision of the asteroid as well
       if (sourcefunc !== null) sourcefunc(source);
@@ -385,8 +394,8 @@ function doCollisionDetectionGeneric(source, target, sourcefunc, targetfunc)
 
 function onAsteroidCollision(element)
 {
-    element.objectDestroy = true;
-    if (element.objectSizeMultiplier > 1)
+    element.objectState.objectDestroy = true;
+    if (element.objectState.objectSizeMultiplier > 1)
     {
         spawnNewAsteroids(element);
     }
@@ -404,15 +413,15 @@ function onShipCollision(not_used)
     if (lives <= 1)
     {
         gameOver = true;
-        spaceShip.objectHidden = true;
-        spaceShipWrap.objectHidden = true;
-        spaceShip.objectDestroy = true;
-        spaceShipWrap.objectDestroy = true;
+        spaceShip.objectState.objectHidden = true;
+        spaceShipWrap.objectState.objectHidden = true;
+        spaceShip.objectState.objectDestroy = true;
+        spaceShipWrap.objectState.objectDestroy = true;
     }
     else
     {
-        spaceShip.objectHidden = true;
-        spaceShipWrap.objectHidden = true;
+        spaceShip.objectState.objectHidden = true;
+        spaceShipWrap.objectState.objectHidden = true;
         lives--;
     }
 }
@@ -424,8 +433,8 @@ function onAlienShipCollision(not_used)
     // Nice effect of ship being destroyed
     spawnAsteroidDebris(alienShip);
 
-    alienShip.objectHidden = true;
-    alienShipWrap.objectHidden = true;
+    alienShip.objectState.objectHidden = true;
+    alienShipWrap.objectState.objectHidden = true;
     resetTimerNextAlienShipVisibility();
 
     increaseScore(alienShip);
@@ -433,7 +442,7 @@ function onAlienShipCollision(not_used)
 
 function onBulletHits(bullet)
 {
-    bullet.objectDestroy = true;
+    bullet.objectState.objectDestroy = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,9 +452,9 @@ function onBulletHits(bullet)
 function doPositionAdjust(object, objectWrap, millis)
 {
     if (object === null) return;
-    object.objectPosX += object.objectSpeedX * millis / 1000;
-    object.objectPosY += object.objectSpeedY * millis / 1000;
-    object.objectBearing += object.objectSpeedRotation * millis / 1000;
+    object.objectState.objectPosX += object.objectState.objectSpeedX * millis / 1000;
+    object.objectState.objectPosY += object.objectState.objectSpeedY * millis / 1000;
+    object.objectState.objectBearing += object.objectState.objectSpeedRotation * 360 * millis / (1000);
 
     // Wrap coordinates
     if ( objectWrap !== null)
@@ -455,10 +464,10 @@ function doPositionAdjust(object, objectWrap, millis)
     else
     {
         // If no wrap object exist, the object is to be destroyed when it goes off the screen
-        if (object.objectPosX < 0 || object.objectPosX > gameAreaMaxX ||
-            object.objectPosY < 0 || object.objectPosY > gameAreaMaxY)
+        if (object.objectState.objectPosX < 0 || object.objectState.objectPosX > gameAreaMaxX ||
+            object.objectState.objectPosY < 0 || object.objectState.objectPosY > gameAreaMaxY)
         {
-            object.objectDestroy = true;
+            object.objectState.objectDestroy = true;
         }
     }
 }
@@ -474,12 +483,12 @@ function spawnNewAsteroids(asteroid)
         var index = asteroids.length;
         asteroids[index] = GameEngine.createSpaceObject(gameParent, "Asteroid.qml");
         var speedXY = 50 * (level - 1);
-        asteroids[index].objectPosX = asteroid.objectPosX;
-        asteroids[index].objectPosY = asteroid.objectPosY;
-        asteroids[index].objectSpeedX = GameEngine.getRandomSpeed(50, 100 + speedXY);
-        asteroids[index].objectSpeedY = GameEngine.getRandomSpeed(50, 100 + speedXY);
-        asteroids[index].objectSpeedRotation = GameEngine.getRandomSpeed(0.1 * level, 0.2 * level);
-        asteroids[index].objectSizeMultiplier = asteroid.objectSizeMultiplier/2;
+        asteroids[index].objectState.objectPosX = asteroid.objectState.objectPosX;
+        asteroids[index].objectState.objectPosY = asteroid.objectState.objectPosY;
+        asteroids[index].objectState.objectSpeedX = GameEngine.getRandomSpeed(50, 100 + speedXY);
+        asteroids[index].objectState.objectSpeedY = GameEngine.getRandomSpeed(50, 100 + speedXY);
+        asteroids[index].objectState.objectSpeedRotation = GameEngine.getRandomSpeed(0.1 * level, 0.2 * level);
+        asteroids[index].objectState.objectSizeMultiplier = asteroid.objectState.objectSizeMultiplier/2;
         asteroids[index].doInit();
         asteroids[index].doRedraw();
         asteroidsWrap[index] = GameEngine.createWrapObject(asteroids[index], "Asteroid.qml");
@@ -492,13 +501,13 @@ function spawnAsteroidDebris(asteroid)
     {
         var index = debris.length;
         debris[index] = GameEngine.createSpaceObject(gameParent, "Debris.qml");
-        debris[index].objectSpeedX = GameEngine.getRandomSpeed(20, 50);
-        debris[index].objectSpeedY = GameEngine.getRandomSpeed(20, 50);
-        debris[index].objectPosX = asteroid.objectPosX;
-        debris[index].objectPosY = asteroid.objectPosY;
-        debris[index].objectSizeMultiplier = 1;
-        debris[index].objectColor = asteroid.objectColor;
-        debris[index].objectLifetimeMs = GameEngine.getRandomValue(200,800);
+        debris[index].objectState.objectSpeedX = GameEngine.getRandomSpeed(20, 50);
+        debris[index].objectState.objectSpeedY = GameEngine.getRandomSpeed(20, 50);
+        debris[index].objectState.objectPosX = asteroid.objectState.objectPosX;
+        debris[index].objectState.objectPosY = asteroid.objectState.objectPosY;
+        debris[index].objectState.objectSizeMultiplier = 1;
+        debris[index].objectState.objectColor = asteroid.objectState.objectColor;
+        debris[index].objectState.objectLifetimeMs = GameEngine.getRandomValue(200,800);
         debris[index].doInit();
         debris[index].doRedraw();
     }
@@ -510,14 +519,14 @@ function spawnShipDebris(ship)
     {
         var index = debris.length;
         debris[index] = GameEngine.createSpaceObject(gameParent, "Debris.qml");
-        debris[index].objectSpeedX = GameEngine.getRandomSpeed(0, 300);
-        debris[index].objectSpeedY = GameEngine.getRandomSpeed(0, 300);
-        debris[index].objectSpeedRotation = GameEngine.getRandomSpeed(-300, 300);
-        debris[index].objectPosX = ship.objectPosX;
-        debris[index].objectPosY = ship.objectPosY;
-        debris[index].objectSizeMultiplier = GameEngine.getRandomSpeed(5, 20);
-        debris[index].objectColor = ship.objectColor;
-        debris[index].objectLifetimeMs = GameEngine.getRandomValue(1000,2000);
+        debris[index].objectState.objectSpeedX = GameEngine.getRandomSpeed(0, 300);
+        debris[index].objectState.objectSpeedY = GameEngine.getRandomSpeed(0, 300);
+        debris[index].objectState.objectSpeedRotation = GameEngine.getRandomSpeed(-1, 1);
+        debris[index].objectState.objectPosX = ship.objectState.objectPosX;
+        debris[index].objectState.objectPosY = ship.objectState.objectPosY;
+        debris[index].objectState.objectSizeMultiplier = GameEngine.getRandomValue(5, 20);
+        debris[index].objectState.objectColor = ship.objectState.objectColor;
+        debris[index].objectState.objectLifetimeMs = GameEngine.getRandomValue(1000,2000);
         debris[index].doInit();
         debris[index].doRedraw();
     }
@@ -539,17 +548,17 @@ function doAlienShipHandling()
 
     if (gameTimeStampMs >= alienShipNextActionMs)
     {
-        if (alienShip.objectHidden)
+        if (alienShip.objectState.objectHidden)
         {
-            if (spaceShip.objectHidden) return;
+            if (spaceShip.objectState.objectHidden) return;
 
             // Start from the right screen any position and the move to the left
-            alienShip.objectPosX = gameAreaMaxX - alienShip.objectSizePixelScaled/2;
-            alienShip.objectPosY = GameEngine.getRandomValue(0 + alienShip.objectSizePixelScaled/2,
-                                                             gameAreaMaxY - alienShip.objectSizePixelScaled/2);
-            alienShip.objectSpeedX = -50;
-            alienShip.objectSpeedY = GameEngine.getRandomValue(-30,30);
-            alienShip.objectHidden = false;
+            alienShip.objectState.objectPosX = gameAreaMaxX - alienShip.objectState.objectSizePixelScaled/2;
+            alienShip.objectState.objectPosY = GameEngine.getRandomValue(0 + alienShip.objectState.objectSizePixelScaled/2,
+                                                             gameAreaMaxY - alienShip.objectState.objectSizePixelScaled/2);
+            alienShip.objectState.objectSpeedX = -50;
+            alienShip.objectState.objectSpeedY = GameEngine.getRandomValue(-30,30);
+            alienShip.objectState.objectHidden = false;
             GameEngine.doWrapCoordinates(alienShip, alienShipWrap, gameAreaMaxX, gameAreaMaxY);
             resetTimerNextAlienShipVisibility();
             initTimerNextAlienShipShoot();
@@ -557,15 +566,15 @@ function doAlienShipHandling()
         else
         {
             // When alienShip reaches the left edge make it disapear
-            if(alienShip.objectPosX <= alienShip.objectSizePixelScaled/2)
+            if(alienShip.objectPosX <= alienShip.objectState.objectSizePixelScaled/2)
             {
-                alienShip.objectHidden = true;
-                alienShipWrap.objectHidden = true;
+                alienShip.objectState.objectHidden = true;
+                alienShipWrap.objectState.objectHidden = true;
                 resetTimerNextAlienShipVisibility();
             }
         }
     }
-    if ( !alienShip.objectHidden && !spaceShip.objectHidden && gameTimeStampMs >= alienShipNextShootMs )
+    if ( !alienShip.objectState.objectHidden && !spaceShip.objectState.objectHidden && gameTimeStampMs >= alienShipNextShootMs )
     {
         createAlienBullet();
         resetTimerNextAlienShipShoot();
@@ -587,16 +596,17 @@ function resetTimerNextAlienShipShoot()
 function createAlienBullet()
 {
     var bullet = GameEngine.createSpaceObject(gameParent, "Bullet.qml");
-    bullet.objectPosX = alienShip.objectPosX;
-    bullet.objectPosY = alienShip.objectPosY;
-    bullet.objectBearing = Math.atan2( (spaceShip.objectPosX - alienShip.objectPosX), -(spaceShip.objectPosY - alienShip.objectPosY))
+    bullet.objectState.objectPosX = alienShip.objectState.objectPosX;
+    bullet.objectState.objectPosY = alienShip.objectState.objectPosY;
+    bullet.objectState.objectBearing = Math.atan2( (spaceShip.objectState.objectPosX - alienShip.objectState.objectPosX),
+                                                  -(spaceShip.objectState.objectPosY - alienShip.objectState.objectPosY))
             * 180 / Math.PI;
     var tmpSpeed = 60 + Math.min(level, 3) * 20; // Bullet speed increase per level (must be faster than ship)
-    bullet.objectSpeedX =  tmpSpeed * Math.sin(bullet.objectBearing * Math.PI/180);
-    bullet.objectSpeedY = -tmpSpeed * Math.cos(bullet.objectBearing * Math.PI/180);
-    bullet.objectSizeMultiplier = 30;
-    bullet.objectLifetimeMs = 4000 + (2000 * level); // Bullet radius increase per level (limit is screen)
-    //console.log(bullet.objectType + bullets.length + " created: " + bullet.objectSpeedX + "/" + bullet.objectSpeedY);
+    bullet.objectState.objectSpeedX =  tmpSpeed * Math.sin(bullet.objectState.objectBearing * Math.PI/180);
+    bullet.objectState.objectSpeedY = -tmpSpeed * Math.cos(bullet.objectState.objectBearing * Math.PI/180);
+    bullet.objectState.objectSizeMultiplier = 30;
+    bullet.objectState.objectLifetimeMs = 4000 + (2000 * level); // Bullet radius increase per level (limit is screen)
+    //console.log(bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
     bullet.doInit();
     bullet.doRedraw();
     alienbullets[alienbullets.length] = bullet;
@@ -617,18 +627,18 @@ function doFastTimerLoop()
     if (spaceShip !== null)
     {
         // Rotate ship
-        if (keyLeft)  { spaceShip.objectBearing -= spaceShip.shipTurnSpeed * 360 * millis / 1000; }
-        if (keyRight) { spaceShip.objectBearing += spaceShip.shipTurnSpeed * 360 * millis / 1000; }
-        spaceShip.objectBearing = spaceShip.objectBearing % 360;
+        if (keyLeft)  { spaceShip.objectState.objectBearing -= spaceShip.shipTurnSpeed * 360 * millis / 1000; }
+        if (keyRight) { spaceShip.objectState.objectBearing += spaceShip.shipTurnSpeed * 360 * millis / 1000; }
+        spaceShip.objectState.objectBearing = spaceShip.objectState.objectBearing % 360;
 
         // Ship thrust
         spaceShip.shipThrust = keyUp
         if (keyUp)
         {
-            spaceShip.objectSpeedX +=  (spaceShip.shipAcceleration * millis/1000) * Math.sin(spaceShip.objectBearing * Math.PI/180);
-            spaceShip.objectSpeedY += -(spaceShip.shipAcceleration * millis/1000) * Math.cos(spaceShip.objectBearing * Math.PI/180);
-            spaceShip.objectSpeedX = GameEngine.limitMinMax(spaceShip.objectSpeedX, -1000, 1000);
-            spaceShip.objectSpeedY = GameEngine.limitMinMax(spaceShip.objectSpeedY, -1000, 1000);
+            spaceShip.objectState.objectSpeedX +=  (spaceShip.shipAcceleration * millis/1000) * Math.sin(spaceShip.objectState.objectBearing * Math.PI/180);
+            spaceShip.objectState.objectSpeedY += -(spaceShip.shipAcceleration * millis/1000) * Math.cos(spaceShip.objectState.objectBearing * Math.PI/180);
+            spaceShip.objectState.objectSpeedX = GameEngine.limitMinMax(spaceShip.objectState.objectSpeedX, -1000, 1000);
+            spaceShip.objectState.objectSpeedY = GameEngine.limitMinMax(spaceShip.objectState.objectSpeedY, -1000, 1000);
         }
     }
 
@@ -641,11 +651,11 @@ function doFastTimerLoop()
     debris.forEach( element => doPositionAdjust(element, null, millis) );
 
     // Shoot bullets
-    if (spaceShip !== null && !spaceShip.objectHidden)
+    if (spaceShip !== null && !spaceShip.objectState.objectHidden)
     {
         if (requestShoot)
         {
-            createBullet();
+            createBullets();
             requestShoot = false;
         }
         if (requestHyperjump)
@@ -675,3 +685,15 @@ function doFastTimerLoop()
     doGameLevelHandling();
 }
 
+function doUltiActivation(activated)
+{
+    spaceShip.ultiActivated = activated;
+}
+
+function getStatistics()
+{
+    var strRet = "Asteroids : " + asteroids.length + "/" + asteroidsWrap.length;
+    strRet += " Bullets : " + bullets.length + "/" + alienbullets.length;
+    strRet += " Debris : " + debris.length;
+    return strRet;
+}

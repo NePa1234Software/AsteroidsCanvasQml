@@ -5,9 +5,9 @@ function doResetObjectPositionToCenter(object, gameAreaMaxX, gameAreaMaxY)
         console.error("ERROR: cannot center object - null");
         return;
     }
-    object.objectPosX = gameAreaMaxX/2;
-    object.objectPosY = gameAreaMaxY/2;
-    //console.log(object.objectType + " (real) : x = " + object.objectPosX + ", y = " + object.objectPosY);
+    object.objectState.objectPosX = gameAreaMaxX/2;
+    object.objectState.objectPosY = gameAreaMaxY/2;
+    //console.log(object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
     object.doRedraw();
 }
 
@@ -15,10 +15,10 @@ function doResetObjectPositionToRandomPosition(object, gameAreaMaxX, gameAreaMax
 {
     if (object === null)
         return;
-    object.objectPosX = getRandomSpacePosition(gameAreaMaxX, 200);
-    object.objectPosY = getRandomSpacePosition(gameAreaMaxY, 200);
-    object.objectBearing = 0;
-    //console.log(object.objectType + " (real) : x = " + object.objectPosX + ", y = " + object.objectPosY);
+    object.objectState.objectPosX = getRandomSpacePosition(gameAreaMaxX, 200);
+    object.objectState.objectPosY = getRandomSpacePosition(gameAreaMaxY, 200);
+    object.objectState.objectBearing = 0;
+    //console.log(object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
     object.doRedraw();
 }
 function getRandomSpacePosition(gameAreaMax, safeArea)
@@ -81,19 +81,19 @@ function createWrapObject(parent, filename)
     if (objectWrap !== null)
     {
         parent.copyInitialProperties(objectWrap)
-        //objectWrap.objectColor = "blue"
-        //console.log(objectWrap.objectType + " (wrap) : x = " + objectWrap.objectPosX + ", y = " + objectWrap.objectPosY);
+        //objectWrap.objectState.objectColor = "blue"
+        //console.log(objectWrap.objectState.objectType + " (wrap) : x = " + objectWrap.objectState.objectPosX + ", y = " + objectWrap.objectState.objectPosY);
     }
     return objectWrap;
 }
 
 function doWrapCoordinates(object, objectWrap, gameAreaMaxX, gameAreaMaxY)
 {
-    var limit = object.objectSizePixelScaled/2;
-    if (object.objectPosX <= -limit) { object.objectPosX = object.objectPosX + gameAreaMaxX; }
-    if (object.objectPosX >= gameAreaMaxX + limit) { object.objectPosX = object.objectPosX - gameAreaMaxX; }
-    if (object.objectPosY <= -limit) { object.objectPosY = object.objectPosY + gameAreaMaxY; }
-    if (object.objectPosY >= gameAreaMaxY + limit) { object.objectPosY = object.objectPosY - gameAreaMaxY; }
+    var limit = object.objectState.objectSizePixelScaled/2;
+    if (object.objectState.objectPosX <= -limit) { object.objectState.objectPosX = object.objectState.objectPosX + gameAreaMaxX; }
+    if (object.objectState.objectPosX >= gameAreaMaxX + limit) { object.objectState.objectPosX = object.objectState.objectPosX - gameAreaMaxX; }
+    if (object.objectState.objectPosY <= -limit) { object.objectState.objectPosY = object.objectState.objectPosY + gameAreaMaxY; }
+    if (object.objectState.objectPosY >= gameAreaMaxY + limit) { object.objectState.objectPosY = object.objectState.objectPosY - gameAreaMaxY; }
     if (objectWrap === null)
     {
         //console.log("no wrap");
@@ -105,40 +105,53 @@ function doWrapCoordinates(object, objectWrap, gameAreaMaxX, gameAreaMaxY)
 
         // Wrap "ghost" ship to view the screen wrapping
         var bVisibleX = false;
-        if ( object.objectPosX >= (gameAreaMaxX - limit) )
+        if ( object.objectState.objectPosX >= (gameAreaMaxX - limit) )
         {
-            objectWrap.objectPosX = object.objectPosX - gameAreaMaxX;
-            bVisibleX = !object.objectHidden;
+            objectWrap.objectState.objectPosX = object.objectState.objectPosX - gameAreaMaxX;
+            bVisibleX = !object.objectState.objectHidden;
         }
-        else if ( object.objectPosX <= limit )
+        else if ( object.objectState.objectPosX <= limit )
         {
-            objectWrap.objectPosX = object.objectPosX + gameAreaMaxX;
-            bVisibleX = !object.objectHidden;
+            objectWrap.objectState.objectPosX = object.objectState.objectPosX + gameAreaMaxX;
+            bVisibleX = !object.objectState.objectHidden;
         }
         else
         {
-            objectWrap.objectPosX = object.objectPosX
+            objectWrap.objectState.objectPosX = object.objectState.objectPosX
         }
         var bVisibleY = false;
-        if ( object.objectPosY >= (gameAreaMaxY - limit) )
+        if ( object.objectState.objectPosY >= (gameAreaMaxY - limit) )
         {
-            objectWrap.objectPosY = object.objectPosY - gameAreaMaxY;
-            bVisibleY = !object.objectHidden;
+            objectWrap.objectState.objectPosY = object.objectState.objectPosY - gameAreaMaxY;
+            bVisibleY = !object.objectState.objectHidden;
         }
-        else if ( object.objectPosY <= limit )
+        else if ( object.objectState.objectPosY <= limit )
         {
-            objectWrap.objectPosY = object.objectPosY + gameAreaMaxY;
-            bVisibleY = !object.objectHidden;
+            objectWrap.objectState.objectPosY = object.objectState.objectPosY + gameAreaMaxY;
+            bVisibleY = !object.objectState.objectHidden;
         }
         else
         {
-            objectWrap.objectPosY = object.objectPosY
+            objectWrap.objectState.objectPosY = object.objectState.objectPosY
         }
-        objectWrap.objectHidden = !(bVisibleX || bVisibleY);
+        objectWrap.objectState.objectHidden = !(bVisibleX || bVisibleY);
     }
 }
 
 function isPointInsideCircle(cx, cy, radius, x, y)
 {
     return Math.sqrt( (x - cx)*(x - cx) + (y - cy)*(y - cy) ) < radius;
+}
+
+function rotateVectorAroundOrigin(ovec_vector2d, objvec_2d, deg)
+{
+    // Note - upwards is y negative
+    var resvec_2d = {x: 0, y: 0}
+    resvec_2d.x = ( (objvec_2d.x * Math.cos(deg * Math.PI/180)) -
+                    (objvec_2d.y * Math.sin(deg * Math.PI/180)) );
+    resvec_2d.y = ( (objvec_2d.x * Math.sin(deg * Math.PI/180)) +
+                    (objvec_2d.y * Math.cos(deg * Math.PI/180)) );
+    resvec_2d.x += ovec_vector2d.x;
+    resvec_2d.y += ovec_vector2d.y;
+    return resvec_2d;
 }

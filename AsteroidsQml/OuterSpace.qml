@@ -13,6 +13,9 @@ Rectangle {
 
     signal newGameStarting
     property bool gameOver: true
+    property bool gamePaused: false
+    property alias ultimateWeaponStatus: statusUlti
+    property string statistics: "Statistics:"
 
     // Start the movement and game controlling
     function beginGame()
@@ -21,6 +24,12 @@ Rectangle {
         Game.newGameRequest(gamearea);
         gamearea.focus = true;
         timer.running = true;
+
+
+        // Reset the ulti and start charging
+        console.log("Ulti: charge");
+        ultimateWeaponStatus.charge = true;
+        ultimateWeaponStatus.percentFull = 0;
     }
 
     // Start the movement and game controlling
@@ -35,7 +44,9 @@ Rectangle {
     function doUpdateStatistics()
     {
         statusBar.updateGameStatus(Game.gameOver, Game.pause, Game.level, Game.lives, Game.score);
-        gameOver = Game.gameOver
+        gameOver = Game.gameOver;
+        ultimateWeaponStatus.paused = Game.pause;
+        statistics = Game.getStatistics();
     }
 
     Rectangle {
@@ -50,34 +61,17 @@ Rectangle {
         onWidthChanged: Game.setGameArea(width, height);
         onHeightChanged: Game.setGameArea(width, height);
 
-        // Reference objects for finding load errors
-        //AlienShip
-        //{
-        //    id: spaceObject
-        //    objectPosX: 100
-        //    objectPosY: 200
-        //    objectBearing: 45
-        //    visible: true
-        //}
-        //Bullet {
-        //    id : myBullet
-        //}
-        //Asteroid {
-        //    id : myAsteroid
-        //}
+        TestArea  {}
 
-        // Reference "dot" at the center of the screen
-        //Rectangle {
-        //    id: screenCenter
-        //    visible: false
-        //    anchors.centerIn: parent
-        //    width: 2
-        //    height: 2
-        //    color:"blue"
-        //    Component.onCompleted: {
-        //        console.log("Screen center is x/y: " + x + "/" + y);
-        //    }
-        //}
+        Label
+        {
+            id: statisticsLabel
+            text: outerspace.statistics
+            color: "yellow"
+            anchors.bottom: parent.bottom
+            anchors.margins: 10
+            anchors.left: parent.left
+        }
     }
 
     Timer {
@@ -91,14 +85,23 @@ Rectangle {
         }
     }
 
+    UltiStatus {
+        id: statusUlti
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 20
+        paused: outerspace.gamePaused
+        onActivatedChanged: {
+            Game.doUltiActivation(activated);
+        }
+    }
+
     PlayerStatusBar {
         id: statusBar
         anchors.bottom: outerspace.bottom
         width: outerspace.width
         onNewGameRequest: {
-            Game.newGameRequest(gamearea);
-            gamearea.focus = true;
-            outerspace.newGameStarting();
+            outerspace.beginGame();
         }
     }
 
@@ -106,6 +109,7 @@ Rectangle {
                     {
                         if (event.key === Qt.Key_P) {
                             Game.pause = !Game.pause;
+                            outerspace.gamePaused = Game.pause;
                         }
                         if (event.key === Qt.Key_Left) {
                             Game.keyLeft = true;
@@ -128,11 +132,14 @@ Rectangle {
                             event.accepted = true;
                         }
                         if (event.key === Qt.Key_Down) {
-                            if (!event.isAutoRepeat)
+                            if (statusUlti.fullyCharged)
+                            {
+                                statusUlti.activateUlti();
+                            }
+                            else if (!event.isAutoRepeat)
                             {
                                 Game.requestHyperjump = true;
                             }
-                            Game.keySpace = true
                             event.accepted = true;
                         }
                     }

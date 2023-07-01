@@ -5,13 +5,12 @@ SpaceObject {
 
     id: spaceShipDebris
 
-    // Override the object image
-    //objectImage: objectImageShip
-    objectType: "alienShip"
-    objectSizePixel: 1
-    objectColor: "orange"
-    objectLifetimeMs: 8000
-    objectHidden: false
+    // Specialize the object state
+    objectState.objectType: "debris"
+    objectState.objectSizePixel: 1
+    objectState.objectColor: "orange"
+    objectState.objectFillColor: "red"
+    objectState.objectLifetimeMs: 8000
 
     // Function is overwritten from base
     function copyDynamicProperties(target)
@@ -26,8 +25,8 @@ SpaceObject {
 
         // Ship Debris
         ctx.beginPath();
-        ctx.moveTo(0, -objectSizePixel * objectSizeMultiplier / 2);
-        ctx.lineTo(0,  objectSizePixel * objectSizeMultiplier / 2);
+        ctx.moveTo(0, -objectState.objectHalfWidth);
+        ctx.lineTo(0,  objectState.objectHalfWidth);
         ctx.closePath();
         ctx.stroke();
     }
@@ -35,10 +34,10 @@ SpaceObject {
     Timer {
         id: timerId
         repeat: false
-        interval: spaceShipDebris.objectLifetimeMs
-        running: spaceShipDebris.objectLifetimeMs > 0
+        interval: spaceShipDebris.objectState.objectLifetimeMs
+        running: spaceShipDebris.objectState.objectLifetimeMs > 0
         onTriggered: {
-            spaceShipDebris.objectDestroy = true;
+            spaceShipDebris.objectState.objectDestroy = true;
         }
     }
 }

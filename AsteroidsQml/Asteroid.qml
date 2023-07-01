@@ -5,13 +5,13 @@ SpaceObject {
 
     id: asteroid
 
-    // Override the base object
-    objectType: "asteroid"
-    objectSizePixel: 20
-    objectColor: "yellow"
+    // Specialize the object state
+    objectState.objectType: "asteroid"
+    objectState.objectSizePixel: 20
+    objectState.objectColor: "yellow"
 
     // Largest size is 8, then 4, then 2 then they can be killed
-    objectSizeMultiplier: 8
+    objectState.objectSizeMultiplier: 8
 
     // TODO make this QtObject
     property int numPoints : 12
@@ -48,10 +48,12 @@ SpaceObject {
             console.log("This mustn't happen!!!");
             return;
         }
+
+        var k = objectState.objectHalfWidth;
+
         points = new Array(numPoints);
-        var radius = (objectSizePixel*objectSizeMultiplier)/2;
         for (var ii = 0; ii < numPoints; ii++) {
-            var radius2 = radius - Math.random() * radius/2;
+            var radius2 = k - Math.random() * k/2;
             var angleRadians = Math.PI * (ii/numPoints) * 360 / 180
             points[ii] = { x: radius2 * Math.cos(angleRadians),
                            y: radius2 * Math.sin(angleRadians) };
