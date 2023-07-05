@@ -8,10 +8,12 @@ SpaceObject {
     readonly property real shipTurnSpeed: 0.5    // full turns per second
     readonly property real shipAcceleration: 1000.0
     property bool shipThrust: false
+
     property bool ultiActivated: false
     property string ultiType: "bigcannons"
 
-    property WeaponInterface weapons: ultiActivated ? weaponImplUlti : weaponImplBasic
+    property WeaponInterface weapons: weaponImplBasic
+    property WeaponInterface weaponsUlti: ultiCannons.weapons
 
     onShipThrustChanged: doRedraw()
 
@@ -19,7 +21,7 @@ SpaceObject {
     objectState.objectType: "spaceShip"
     objectState.objectSizePixel: 40
     objectState.objectColor: "white"
-    objectState.objectFillColor: "grey"
+    objectState.objectFillColor: "lightgrey"
 
     // Function is overwritten from base
     function copyDynamicProperties(target)
@@ -35,23 +37,44 @@ SpaceObject {
     // line coloring and width is already set
     onDrawObjectSignal: (ctx)=> {
 
-        var k = objectState.objectHalfWidth;
+        var h = objectState.objectHalfWidth;
+        var w = h/2;
+        var r = 2;
+        var j = 2;
 
-        // Ship
-        ctx.beginPath();
-        ctx.moveTo(0, -k);
-        ctx.lineTo(k/2, k);
-        ctx.lineTo(-k/2, k);
-        ctx.lineTo(0, -k);
-        ctx.lineTo(0, -k + k/5);  // Mini cannon at front
-        ctx.closePath();
-        ctx.stroke();
+        ctx.globalCompositeOperation = "source-over";
 
         // Rear thrust
         if (shipThrust) {
             ctx.fillStyle = "red";
-            ctx.fillRect(-10,k,20,20);
+            ctx.fillRect(-10,h-10,20,20);
         }
+
+        // Ship
+        ctx.fillStyle = objectState.objectFillColor;
+        ctx.beginPath();
+        ctx.moveTo(0,-h);
+        ctx.lineTo(w,h-j);
+        ctx.arcTo(w,h, w-j,h, r);
+        ctx.lineTo(w-j, h);
+        ctx.arcTo(0,h-j, -w+j,h, r);
+        ctx.lineTo(-w+j,h);
+        ctx.arcTo(-w,h, -w,h-j, r);
+        ctx.lineTo(-w,h-j);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+
+        // Windows
+        ctx.clearRect(-3,  3, 6, 6);
+        ctx.clearRect(-3, 10, 6, 6);
+
+        // Canon
+        ctx.clearRect(-3,-h-6, 6, h+1);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(-2,-h-5, 4,h);
+        ctx.rect(-3,-h-6, 6,h+1);
+        ctx.stroke();
     }
 
     // This is an object needed by the game engine to fire bullets
@@ -67,44 +90,16 @@ SpaceObject {
             }
         ]
     }
-    WeaponInterface
+
+    // TODO - make this a loader, depending on the Ulti type (when we have more than 1)
+    UltiCannons
     {
-        id: weaponImplUlti
-        weaponType: "ulticannon"
-        cannonList: [
-            CannonInterface {
-                r_y: -objectState.objectHalfWidth
-                cannonDamage: 1
-                cannonPoweredUp: true
-            },
-            CannonInterface {
-                r_y: 0
-                r_x: objectState.objectHalfWidth/2
-                r_angle: 5
-                cannonDamage: 2
-                cannonPoweredUp: ultiActivated
-            },
-            CannonInterface {
-                r_y: 0
-                r_x: -objectState.objectHalfWidth/2
-                r_angle: -5
-                cannonDamage: 2
-                cannonPoweredUp: ultiActivated
-            },
-            CannonInterface {
-                r_y: objectState.objectHalfWidth
-                r_x: objectState.objectHalfWidth/2
-                r_angle: 175
-                cannonDamage: 1
-                cannonPoweredUp: ultiActivated
-            },
-            CannonInterface {
-                r_y: objectState.objectHalfWidth
-                r_x: -objectState.objectHalfWidth/2
-                r_angle: 185
-                cannonDamage: 2
-                cannonPoweredUp: ultiActivated
-            }
-        ]
+        id: ultiCannons
+        objectState.objectPosX: spaceShip.objectState.objectPosX
+        objectState.objectPosY: spaceShip.objectState.objectPosY
+        objectState.objectBearing: spaceShip.objectState.objectBearing
+        objectState.objectHidden: spaceShip.objectState.objectHidden || !spaceShip.ultiActivated
+        ultiActivated: spaceShip.ultiActivated
+        z: spaceShip.z - 1
     }
 }

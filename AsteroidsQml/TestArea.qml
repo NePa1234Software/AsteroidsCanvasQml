@@ -9,7 +9,8 @@ Item {
     //    id: testShip
     //    objectState.objectPosX: 100
     //    objectState.objectPosY: 200
-    //    objectState.objectBearing: 45
+    //    objectState.objectBearing: 0
+    //    ultiActivated: true
     //    visible: true
     //}
 

@@ -277,11 +277,13 @@ function createBulletsContainer()
 
 function createBullets()
 {
-    spaceShip.weapons.cannonList.forEach( cannon => createBullet(spaceShip, cannon) );
+    spaceShip.weapons?.cannonList?.forEach( cannon => createBullet(spaceShip, cannon) );
+    spaceShip.weaponsUlti?.cannonList?.forEach( cannon => createBullet(spaceShip, cannon) );
 }
 
 function createBullet( ship, cannon )
 {
+    if (!cannon.cannonPoweredUp) return;
     var bullet = GameEngine.createSpaceObject(gameParent, "Bullet.qml");
     bullet.objectState.objectBearing = ship.objectState.objectBearing + cannon.r_angle;
     var result = GameEngine.rotateVectorAroundOrigin(

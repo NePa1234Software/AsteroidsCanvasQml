@@ -12,6 +12,6 @@ qt_add_qml_module(moduleAsteroidsQml
     main.qml OuterSpace.qml TestArea.qml
     Asteroid.qml AsteroidsSplashScreen.qml PlayerStatusBar.qml
     SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml ObjectState.qml
-    AlienShip.qml UltiStatus.qml WeaponInterface.qml CannonInterface.qml
+    AlienShip.qml UltiStatus.qml UltiCannons.qml WeaponInterface.qml CannonInterface.qml
     gameEngine.js gameAsteroids.js
 )
