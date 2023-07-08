@@ -8,6 +8,7 @@ Item {
     property int dischargeTimeMs: 5000
     property int innerMargin: 2
     property bool paused: false
+    onPausedChanged: console.log("Ulti: Paused")
     property bool charge: false
 
     readonly property bool activated: internal.activated
@@ -18,6 +19,7 @@ Item {
     {
         id: internal
         property bool activated: false
+        property int  textXoffset: 0
     }
 
     onFullyEmptyChanged: {
@@ -51,10 +53,11 @@ Item {
         Text {
             id: statusText
             anchors.centerIn: parent
+            anchors.horizontalCenterOffset: internal.textXoffset
             font.pixelSize: 24
             font.bold: root.fullyCharged
             color: "yellow"
-            text: root.paused ? "PAUSED" : root.state
+            text: root.state
             visible: true
         }
 
@@ -72,6 +75,12 @@ Item {
     }
 
     states: [
+        State {
+            name: "PAUSED"
+            when: root.paused
+            PropertyChanges { target: fillRect; color: "transparent"}
+            PropertyChanges { target: root; percentFull: 0}
+        },
         State {
             name: "CHARGING"
             when: root.charge && !root.activated && (root.percentFull < 100)
@@ -105,9 +114,7 @@ Item {
                 target: root
                 properties: "percentFull"
                 duration: root.chargeTimeMs
-                from: 0
                 to: 100
-                paused: running && root.paused
             }
         },
         Transition {
@@ -116,8 +123,7 @@ Item {
                 target: root
                 properties: "percentFull"
                 duration: root.dischargeTimeMs
-                to: 100
-                paused: running && root.paused
+                to: 0
             }
         },
         Transition {
@@ -126,9 +132,37 @@ Item {
                 target: root
                 properties: "percentFull"
                 duration: root.dischargeTimeMs
-                from: 100
                 to: 0
-                paused: running && root.paused
+            }
+            PropertyAnimation {
+                target: statusText
+                property: "opacity"
+                duration: 500
+                from: 0
+                to: 1
+                loops: Animation.Infinite
+            }
+        },
+        Transition {
+            to: "PAUSED"
+            SequentialAnimation {
+                loops: Animation.Infinite
+                PropertyAnimation {
+                    target: internal
+                    property: "textXoffset"
+                    duration: 500
+                    from: -10
+                    to: 10
+                    easing: Easing.InOutQuad
+                }
+                PropertyAnimation {
+                    target: internal
+                    property: "textXoffset"
+                    duration: 500
+                    from: 10
+                    to: -10
+                    easing: Easing.InOutQuad
+                }
             }
         }
     ]
