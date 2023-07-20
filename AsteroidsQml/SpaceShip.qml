@@ -42,7 +42,7 @@ SpaceObject {
         var r = 2;
         var j = 2;
 
-        ctx.globalCompositeOperation = "source-over";
+        ctx.globalCompositeOperation = "copy";
 
         // Rear thrust
         if (shipThrust) {
@@ -71,10 +71,8 @@ SpaceObject {
 
         // Canon
         ctx.clearRect(-3,-h-6, 6, h+1);
-        ctx.fillStyle = "blue";
         ctx.fillRect(-2,-h-5, 4,h);
-        ctx.rect(-3,-h-6, 6,h+1);
-        ctx.stroke();
+        //ctx.strokeRect(-3,-h-6, 6,h+1);
     }
 
     // This is an object needed by the game engine to fire bullets

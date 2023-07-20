@@ -19,7 +19,7 @@ Item {
     {
         id: internal
         property bool activated: false
-        property int  textXoffset: 0
+        property real  textXoffset: 0
     }
 
     onFullyEmptyChanged: {
@@ -151,17 +151,17 @@ Item {
                     target: internal
                     property: "textXoffset"
                     duration: 500
-                    from: -10
-                    to: 10
-                    easing: Easing.InOutQuad
+                    from: -10.0
+                    to: 10.0
+                    easing.type: Easing.OutBounce
                 }
                 PropertyAnimation {
                     target: internal
                     property: "textXoffset"
                     duration: 500
-                    from: 10
-                    to: -10
-                    easing: Easing.InOutQuad
+                    from: 10.0
+                    to: -10.0
+                    easing.type: Easing.OutBounce
                 }
             }
         }
