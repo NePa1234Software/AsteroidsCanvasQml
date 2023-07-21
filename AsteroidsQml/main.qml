@@ -30,7 +30,7 @@ Window {
 
         onGameOverChanged: {
             if (gameOver) {
-                splash.showSplashScreen();
+                gameOverText.showGameOverScreen();
             }
         }
 
@@ -45,7 +45,17 @@ Window {
     AsteroidsSplashScreen {
         id: splash
         timeoutMs: 0
+        anchors.centerIn: parent
         //onSplashScreenClosed: asteroidsQml.beginGame();
+    }
+
+    GameOver {
+        id: gameOverText
+        anchors.centerIn: parent
+        anchors.fill: parent
+        onGameOverScreenClosed: {
+            splash.showSplashScreen();
+        }
     }
 
     Component.onCompleted: {
@@ -57,5 +67,7 @@ Window {
         console.log("Screen virtualY :  " + Screen.virtualY  );
         console.log("App width:  " + asteroidsGameQml.width);
         console.log("App height: " + asteroidsGameQml.height);
+        //gameOverText.showGameOverScreen();
+        splash.showSplashScreen();
     }
 }

@@ -3,9 +3,9 @@ import QtQuick.Controls
 
 Item {
     id: control
+    visible: false
     property alias splashText: content.text
     property int timeoutMs: 5000
-    anchors.centerIn: parent
 
     signal splashScreenClosed
 
@@ -13,13 +13,13 @@ Item {
     function closeSplashScreen()
     {
         console.log("Splash closed...")
-        splash.visible = false
+        control.visible = false
         splashScreenClosed();
     }
     function showSplashScreen()
     {
         console.log("Splash opened...")
-        splash.visible = true
+        control.visible = true
     }
 
     Rectangle {
@@ -29,7 +29,7 @@ Item {
         height: content.height + 100
         radius: 50
         opacity: 0.8
-        visible: true
+        //visible: true
         color: "lightgreen"
         Text {
             id: content
