@@ -11,6 +11,9 @@ Project was built against Qt 6.5.
 
 Author: Neil Parker
 
+Play Online
+https://nepa1234software.github.io/AsteroidsCanvasQml-WebAssembly/appAsteroidsQml.html
+
 # Qt
 Qt is available either as a commercial or opensource license. I am using the opensource license and have thus chosen the GPL version for this code as well. 
 I am not a QML expert, so do not expect the best code (yet).
