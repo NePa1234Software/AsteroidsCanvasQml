@@ -18,16 +18,19 @@ target_link_libraries(appAsteroidsQml PRIVATE Qt6::Quick Qt6::Qml moduleAsteroid
 # cd <build folder>
 # C:\Qt\Tools\CMake_64\bin\cmake --install . --config Release --prefix %CD%\portable
 # -----------------------------------------------------------
-
-qt_generate_deploy_qml_app_script(
-    TARGET appAsteroidsQml
-    OUTPUT_SCRIPT deploy_script # from qt 6.5
-    FILENAME_VARIABLE deploy_script
-)
+if(WIN32)
+    qt_generate_deploy_qml_app_script(
+        TARGET appAsteroidsQml
+        OUTPUT_SCRIPT deploy_script # from qt 6.5
+        #FILENAME_VARIABLE deploy_script depricated
+    )
+endif()
 
 install(TARGETS appAsteroidsQml
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-install(SCRIPT ${deploy_script})
+if(WIN32)
+    install(SCRIPT ${deploy_script})
+endif()
