@@ -21,42 +21,12 @@ Window {
     {
         id: asteroidsQml
         anchors.fill: parent
-        //width: asteroidsGameQml.newWidth
-        //height: asteroidsGameQml.newHeight
 
+        //TODO Get this to work later...
         //transform: Scale {
         //    xScale: Screen.width / newWidth
         //    yScale: Screen.height / newHeight
         //}
-
-        onGameOverChanged: {
-            if (gameOver) {
-                gameOverText.showGameOverScreen();
-            }
-        }
-
-        onNewGameStarting: {
-            splash.closeSplashScreen();
-        }
-        Component.onCompleted: {
-            initGame();
-        }
-    }
-
-    AsteroidsSplashScreen {
-        id: splash
-        timeoutMs: 0
-        anchors.centerIn: parent
-        //onSplashScreenClosed: asteroidsQml.beginGame();
-    }
-
-    GameOver {
-        id: gameOverText
-        anchors.centerIn: parent
-        anchors.fill: parent
-        onGameOverScreenClosed: {
-            splash.showSplashScreen();
-        }
     }
 
     Component.onCompleted: {
@@ -68,7 +38,5 @@ Window {
         console.log("Screen virtualY :  " + Screen.virtualY  );
         console.log("App width:  " + asteroidsGameQml.width);
         console.log("App height: " + asteroidsGameQml.height);
-        //gameOverText.showGameOverScreen();
-        splash.showSplashScreen();
     }
 }

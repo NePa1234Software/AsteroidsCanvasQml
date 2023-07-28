@@ -11,16 +11,22 @@ Rectangle {
     implicitWidth: 600
     implicitHeight: 400
 
-    signal newGameStarting
+    //signal newGameStarting
     property bool gameOver: true
     property bool gamePaused: false
     property alias ultimateWeaponStatus: statusUlti
     property string statistics: "Statistics:"
 
+    onGameOverChanged: {
+        if (gameOver) {
+            gameOverText.showGameOverScreen();
+        }
+    }
+
     // Start the movement and game controlling
     function beginGame()
     {
-        newGameStarting();
+        //newGameStarting();
         Game.newGameRequest(gamearea);
         gamearea.focus = true;
         timer.running = true;
@@ -30,6 +36,14 @@ Rectangle {
         console.log("Ulti: charge");
         ultimateWeaponStatus.charge = true;
         ultimateWeaponStatus.percentFull = 0;
+
+        splash.closeSplashScreen();
+    }
+
+    function togglePauseGame() {
+        Game.pause = !Game.pause;
+        outerspace.gamePaused = Game.pause;
+        gamearea.focus = true;
     }
 
     // Start the movement and game controlling
@@ -39,6 +53,9 @@ Rectangle {
         Game.initGameRequest(gamearea);
         gamearea.focus = true;
         timer.running = true;
+
+        //TEST gameOverText.showGameOverScreen();
+        splash.showSplashScreen();
     }
 
     function doUpdateStatistics()
@@ -49,14 +66,31 @@ Rectangle {
         statistics = Game.getStatistics();
     }
 
+    // Status bar at the top
+    PlayerStatusBar {
+        id: statusBar
+        anchors.top: outerspace.top
+        anchors.left: outerspace.left
+        width: outerspace.width
+        onNewGameRequest: {
+            outerspace.beginGame();
+        }
+        onPauseGameRequest: {
+            outerspace.togglePauseGame();
+        }
+    }
+
     Rectangle {
         id: gamearea
 
         width: parent.width
-        anchors.top: parent.top;
-        anchors.bottom: statusBar.top
+        anchors.top: statusBar.bottom;
+        anchors.bottom: outerspace.bottom
         color: "black"
+
+        // Important that this stays true to allow game control
         focus: true
+        onFocusChanged: console.log("gamearea: focus changed - " + focus)
 
         onWidthChanged: Game.setGameArea(width, height);
         onHeightChanged: Game.setGameArea(width, height);
@@ -68,9 +102,9 @@ Rectangle {
             id: statisticsLabel
             text: outerspace.statistics
             color: "yellow"
-            anchors.bottom: parent.bottom
+            anchors.top: gamearea.top
             anchors.margins: 10
-            anchors.left: parent.left
+            anchors.left: gamearea.left
         }
     }
 
@@ -87,21 +121,12 @@ Rectangle {
 
     UltiStatus {
         id: statusUlti
-        anchors.top: parent.top
-        anchors.right: parent.right
+        anchors.top: gamearea.top
+        anchors.right: gamearea.right
         anchors.margins: 20
         paused: outerspace.gamePaused
         onActivatedChanged: {
             Game.doUltiActivation(activated);
-        }
-    }
-
-    PlayerStatusBar {
-        id: statusBar
-        anchors.bottom: outerspace.bottom
-        width: outerspace.width
-        onNewGameRequest: {
-            outerspace.beginGame();
         }
     }
 
@@ -132,13 +157,16 @@ Rectangle {
                             event.accepted = true;
                         }
                         if (event.key === Qt.Key_Down) {
+                            if (!event.isAutoRepeat)
+                            {
+                                Game.requestHyperjump = true;
+                            }
+                            event.accepted = true;
+                        }
+                        if (event.key === Qt.Key_Shift) {
                             if (statusUlti.fullyCharged)
                             {
                                 statusUlti.activateUlti();
-                            }
-                            else if (!event.isAutoRepeat)
-                            {
-                                Game.requestHyperjump = true;
                             }
                             event.accepted = true;
                         }
@@ -162,5 +190,25 @@ Rectangle {
                              event.accepted = true;
                          }
                      }
+
+    AsteroidsSplashScreen {
+        id: splash
+        timeoutMs: 0
+        anchors.centerIn: parent
+        //onSplashScreenClosed: asteroidsQml.beginGame();
+    }
+
+    GameOver {
+        id: gameOverText
+        anchors.centerIn: parent
+        anchors.fill: parent
+        onGameOverScreenClosed: {
+            splash.showSplashScreen();
+        }
+    }
+
+    Component.onCompleted: {
+        initGame();
+    }
 
 }
