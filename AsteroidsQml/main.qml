@@ -14,12 +14,8 @@ Window {
     visibility: Window.FullScreen
     //title: qsTr("Neils Asteroids QML (Canvas Based)")
 
-    property int newWidth: 800
-    property int newHeight: 450
-
-    Scale {
-        xScale: Screen.width / newWidth
-    }
+    property int newWidth: 1920
+    property int newHeight: 1032
 
     OuterSpace
     {
@@ -27,6 +23,11 @@ Window {
         anchors.fill: parent
         //width: asteroidsGameQml.newWidth
         //height: asteroidsGameQml.newHeight
+
+        //transform: Scale {
+        //    xScale: Screen.width / newWidth
+        //    yScale: Screen.height / newHeight
+        //}
 
         onGameOverChanged: {
             if (gameOver) {
