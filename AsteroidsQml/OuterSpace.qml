@@ -125,6 +125,7 @@ Rectangle {
             }
             onReleased: {
                 Game.keyLeft = false;
+                gamearea.focus = true;
             }
         }
         ControlButton {

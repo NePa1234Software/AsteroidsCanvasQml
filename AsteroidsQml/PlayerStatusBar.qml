@@ -85,6 +85,7 @@ Rectangle {
 
         Text {
             id: scoreText
+            Layout.rightMargin: 10
             text: "Score: "
             font.pixelSize: toolBar.textPixelSize
         }
