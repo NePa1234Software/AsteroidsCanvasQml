@@ -13,8 +13,14 @@ qt_add_qml_module(moduleAsteroidsQml
     Asteroid.qml AsteroidsSplashScreen.qml PlayerStatusBar.qml GameOver.qml
     SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml ObjectState.qml
     AlienShip.qml UltiStatus.qml UltiCannons.qml WeaponInterface.qml CannonInterface.qml
-    gameEngine.js gameAsteroids.js
+    gameEngine.js gameAsteroids.js ControlButton.qml
 
     RESOURCES
     Fonts/Vectorb.ttf
+    Icons/arrow_back.svg
+    Icons/arrow_forward.svg
+    Icons/stat_3.svg
+    Icons/destruction.svg
+    Icons/open_with.svg
+    Icons/star.svg
 )

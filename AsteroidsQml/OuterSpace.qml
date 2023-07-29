@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Neil Parker
 
 import QtQuick
-import QtQuick.Controls 2.15
+import QtQuick.Controls
 import "gameEngine.js" as GameEngine
 import "gameAsteroids.js" as Game
 
@@ -10,6 +10,7 @@ Rectangle {
 
     implicitWidth: 600
     implicitHeight: 400
+    property int controlTextPixelSize: 46
 
     //signal newGameStarting
     property bool gameOver: true
@@ -97,6 +98,11 @@ Rectangle {
 
         TestArea  {}
 
+        FontLoader {
+            id: fontResource
+            source: "Fonts/Vectorb.ttf"
+        }
+
         Label
         {
             id: statisticsLabel
@@ -105,6 +111,93 @@ Rectangle {
             anchors.top: gamearea.top
             anchors.margins: 10
             anchors.left: gamearea.left
+        }
+
+        ControlButton {
+            id: roundButtonLeft
+            anchors.left: gamearea.left
+            anchors.leftMargin: 100
+            anchors.bottom: gamearea.bottom
+            anchors.bottomMargin: 100
+            icon.source: "Icons/arrow_back.svg"
+            onPressed: {
+                Game.keyLeft = true;
+            }
+            onReleased: {
+                Game.keyLeft = false;
+            }
+        }
+        ControlButton {
+            id: roundButtonRight
+            anchors.left: roundButtonLeft.right
+            anchors.leftMargin: 50
+            anchors.bottom: gamearea.bottom
+            anchors.bottomMargin: 100
+            icon.source: "Icons/arrow_forward.svg"
+            onPressed: {
+                Game.keyRight = true;
+            }
+            onReleased: {
+                Game.keyRight = false;
+                gamearea.focus = true;
+            }
+        }
+        ControlButton {
+            id: roundButtonShoot
+            anchors.right: gamearea.right
+            anchors.rightMargin: 50
+            anchors.bottom: gamearea.bottom
+            anchors.bottomMargin: 150
+            icon.source: "Icons/destruction.svg"
+            focus: false
+            onPressed: {
+                Game.requestShoot = true;
+            }
+            onReleased: {
+                gamearea.focus = true;
+            }
+        }
+        ControlButton {
+            id: roundButtonThrust
+            anchors.right: roundButtonShoot.left
+            anchors.rightMargin: 50
+            anchors.bottom: gamearea.bottom
+            anchors.bottomMargin: 100
+            icon.source: "Icons/stat_3.svg"
+            onPressed: {
+                Game.keyUp = true;
+            }
+            onReleased: {
+                Game.keyUp = false;
+                gamearea.focus = true;
+            }
+        }
+        ControlButton {
+            id: roundButtonHyperspace
+            anchors.bottom: roundButtonShoot.top
+            anchors.bottomMargin: 100
+            anchors.left: roundButtonShoot.left
+            icon.source: "Icons/open_with.svg"
+            onPressed: {
+                Game.requestHyperjump = true;
+            }
+            onReleased: {
+                gamearea.focus = true;
+            }
+        }
+        ControlButton {
+            id: roundButtonUlti
+            visible: statusUlti.fullyCharged
+            anchors.bottom: roundButtonThrust.top
+            anchors.bottomMargin: 100
+            anchors.left: roundButtonThrust.left
+            icon.source: "Icons/star.svg"
+            onPressed: {
+                statusUlti.activateUlti();
+            }
+            onReleased: {
+                gamearea.focus = true;
+            }
         }
     }
 
