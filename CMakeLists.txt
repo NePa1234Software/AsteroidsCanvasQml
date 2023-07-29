@@ -13,6 +13,10 @@ set_target_properties(appAsteroidsQml PROPERTIES WIN32_EXECUTABLE TRUE)
 
 target_link_libraries(appAsteroidsQml PRIVATE Qt6::Quick Qt6::Qml moduleAsteroidsQmlplugin)
 
+if(EMSCRIPTEN)
+    target_link_options(appAsteroidsQml PUBLIC -sASYNCIFY -Os)
+endif()
+
 # -----------------------------------------------------------
 # installation using windeployqt
 # cd <build folder>

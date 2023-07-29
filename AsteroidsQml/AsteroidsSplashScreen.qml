@@ -35,7 +35,7 @@ Item {
             id: content
             anchors.centerIn: parent
             text:
-                  "<h1><b>AsteroidsCanvasQML</b></h1>" +
+                  "<h1><b>AsteroidsCanvasQML (V 1.1) </b></h1>" +
                   "<h1><b> Author: Neil Parker</b></h1>" +
                   "<br>" +
                   "<h1>Welcome to my very first QML Game !!!</h1>\n" +

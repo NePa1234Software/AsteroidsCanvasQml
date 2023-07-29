@@ -11,7 +11,7 @@ function doResetObjectPositionToCenter(object, gameAreaMaxX, gameAreaMaxY)
     object.doRedraw();
 }
 
-function doResetObjectPositionToRandomPosition(object, gameAreaMaxX, gameAreaMaxY)
+function doResetObjectPositionToRandomPosition(object, gameAreaMaxX, gameAreaMaxY, redraw)
 {
     if (object === null)
         return;
@@ -19,16 +19,20 @@ function doResetObjectPositionToRandomPosition(object, gameAreaMaxX, gameAreaMax
     object.objectState.objectPosY = getRandomSpacePosition(gameAreaMaxY, 200);
     object.objectState.objectBearing = 0;
     //console.log(object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
-    object.doRedraw();
+    if(redraw) object.doRedraw();
 }
 function getRandomSpacePosition(gameAreaMax, safeArea)
 {
-    var retVal = Math.random() * gameAreaMax;
-    if (Math.abs(retVal - gameAreaMax/2) > safeArea)
+    if (safeArea >= gameAreaMax) return gameAreaMax;
+    var retVal = Math.random() * (gameAreaMax-safeArea);
+    if ( retVal > (gameAreaMax/2 - safeArea/2) )
+    {
+        return retVal + safeArea;
+    }
+    else
     {
         return retVal;
     }
-    return getRandomSpacePosition(gameAreaMax, safeArea);
 }
 function getRandomSpeed(min, max)
 {

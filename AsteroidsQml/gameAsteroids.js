@@ -246,12 +246,12 @@ function createAsteroids(count, sizeFactor)
         // Create the wrappable asteroid
         var index = asteroids.length
         asteroids[index] = GameEngine.createSpaceObject(gameParent, "Asteroid.qml");
-        GameEngine.doResetObjectPositionToRandomPosition(asteroids[index], gameAreaMaxX, gameAreaMaxY);
         var speedXY = 5 * (Math.min(level,3) - 1) + (8 - sizeFactor) * 2.5;
         asteroids[index].objectState.objectSpeedX = GameEngine.getRandomSpeed(30, 100 + speedXY);
         asteroids[index].objectState.objectSpeedY = GameEngine.getRandomSpeed(0.3, 100 + speedXY);
         asteroids[index].objectState.objectSpeedRotation = GameEngine.getRandomSpeed(0.1, 0.3);
         asteroids[index].objectState.objectSizeMultiplier = sizeFactor;
+        GameEngine.doResetObjectPositionToRandomPosition(asteroids[index], gameAreaMaxX, gameAreaMaxY, false);
         asteroids[index].doInit();
         asteroids[index].doRedraw();
         asteroidsWrap[index] = GameEngine.createWrapObject(asteroids[index], "Asteroid.qml");
