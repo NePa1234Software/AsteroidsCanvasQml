@@ -8,16 +8,21 @@ if(EMSCRIPTEN)
     target_link_options(moduleAsteroidsQml PUBLIC -sASYNCIFY -Os)
 endif()
 
+
+set_source_files_properties(GameEngine.qml PROPERTIES
+    QT_QML_SINGLETON_TYPE TRUE
+)
 qt_add_qml_module(moduleAsteroidsQml
     URI AsteroidsQml
     VERSION 1.0
     # OUTPUT_DIRECTORY /AsteroidsQml
     QML_FILES
-    main.qml OuterSpace.qml TestArea.qml
+    main.qml GameEngine.qml OuterSpace.qml TestArea.qml
     Asteroid.qml AsteroidsSplashScreen.qml PlayerStatusBar.qml GameOver.qml
     SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml ObjectState.qml
     AlienShip.qml UltiStatus.qml UltiCannons.qml WeaponInterface.qml CannonInterface.qml
     gameEngine.js gameAsteroids.js ControlButton.qml
+    MenuButton.qml KeyboardHandler.qml
 
     RESOURCES
     Fonts/Vectorb.ttf
@@ -27,5 +32,5 @@ qt_add_qml_module(moduleAsteroidsQml
     Icons/destruction.svg
     Icons/open_with.svg
     Icons/star.svg
-    QML_FILES MenuButton.qml
+
 )

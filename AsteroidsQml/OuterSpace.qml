@@ -2,8 +2,6 @@
 
 import QtQuick
 import QtQuick.Controls
-import "gameEngine.js" as GameEngine
-import "gameAsteroids.js" as Game
 
 Rectangle {
     id: outerspace
@@ -11,14 +9,25 @@ Rectangle {
     implicitWidth: 600
     implicitHeight: 400
     property int controlTextPixelSize: 46
-    focus: true
-    onFocusChanged: console.log("Outerspace focus: " + focus)
 
-    //signal newGameStarting
     property bool gameOver: true
-    property bool gamePaused: false
+    property alias gamePaused: keyHandler.gamePaused
     property alias ultimateWeaponStatus: statusUlti
     property string statistics: "Statistics:"
+
+    focus: true
+    onFocusChanged: console.log("Outerspace focus changed ! : " + focus)
+    onActiveFocusChanged: console.log("Outerspace activeFocus changed ! : " + activeFocus)
+    Keys.forwardTo: [keyHandler,gamearea,statusBar]
+
+    KeyboardHandler {
+        id: keyHandler
+        focus: true
+        gamePaused: false
+        onUltiActivationRequest: {
+            statusUlti.activateUlti();
+        }
+    }
 
     onGameOverChanged: {
         if (gameOver) {
@@ -30,10 +39,8 @@ Rectangle {
     function beginGame()
     {
         //newGameStarting();
-        Game.newGameRequest(gamearea);
-        //gamearea.focus = true;
+        GameEngine.newGameRequest(gamearea);
         timer.running = true;
-
 
         // Reset the ulti and start charging
         console.log("Ulti: charge");
@@ -43,18 +50,11 @@ Rectangle {
         splash.closeSplashScreen();
     }
 
-    function togglePauseGame() {
-        Game.pause = !Game.pause;
-        outerspace.gamePaused = Game.pause;
-        //gamearea.focus = true;
-    }
-
     // Start the movement and game controlling
     function initGame()
     {
-        Game.setGameArea(gamearea.width, gamearea.height)
-        Game.initGameRequest(gamearea);
-        //gamearea.focus = true;
+        GameEngine.initGameRequest(gamearea);
+        GameEngine.setGameArea(gamearea.width, gamearea.height);
         timer.running = true;
 
         //TEST gameOverText.showGameOverScreen();
@@ -63,10 +63,10 @@ Rectangle {
 
     function doUpdateStatistics()
     {
-        statusBar.updateGameStatus(Game.gameOver, Game.pause, Game.level, Game.lives, Game.score);
-        gameOver = Game.gameOver;
-        ultimateWeaponStatus.paused = Game.pause;
-        statistics = Game.getStatistics();
+        statusBar.updateGameStatus(GameEngine.gameOver(), GameEngine.paused(), GameEngine.level(), GameEngine.lives(), GameEngine.score());
+        gameOver = GameEngine.gameOver();
+        ultimateWeaponStatus.paused = GameEngine.paused();
+        statistics = GameEngine.getStatistics();
     }
 
     // Status bar at the top
@@ -75,13 +75,12 @@ Rectangle {
         anchors.top: outerspace.top
         anchors.left: outerspace.left
         width: outerspace.width
+        onActiveFocusChanged: console.log("PlayerStatusBar activeFocus changed ! : " + activeFocus)
         onNewGameRequest: {
             outerspace.beginGame();
-            //gamearea.focus = true;
         }
         onPauseGameRequest: {
-            outerspace.togglePauseGame();
-            //gamearea.focus = true;
+            keyHandler.togglePauseGame();
         }
     }
 
@@ -93,12 +92,10 @@ Rectangle {
         anchors.bottom: outerspace.bottom
         color: "black"
 
-        // Important that this stays true to allow game control
-        //focus: true
-        onFocusChanged: console.log("gamearea: focus changed - " + focus)
+        onFocusChanged: console.log("gamearea focus changed ! : " + focus)
 
-        onWidthChanged: Game.setGameArea(width, height);
-        onHeightChanged: Game.setGameArea(width, height);
+        onWidthChanged: GameEngine.setGameArea(width, height);
+        onHeightChanged: GameEngine.setGameArea(width, height);
 
         TestArea  {}
 
@@ -125,11 +122,10 @@ Rectangle {
             anchors.bottomMargin: 100
             icon.source: "Icons/arrow_back.svg"
             onPressed: {
-                Game.keyLeft = true;
+                GameEngine.rotateLeft(true);
             }
             onReleased: {
-                Game.keyLeft = false;
-                //gamearea.focus = true;
+                GameEngine.rotateLeft(false);
             }
         }
         ControlButton {
@@ -140,11 +136,10 @@ Rectangle {
             anchors.bottomMargin: 100
             icon.source: "Icons/arrow_forward.svg"
             onPressed: {
-                Game.keyRight = true;
+                GameEngine.rotateRight(true);
             }
             onReleased: {
-                Game.keyRight = false;
-                //gamearea.focus = true;
+                GameEngine.rotateRight(false);
             }
         }
         ControlButton {
@@ -155,10 +150,7 @@ Rectangle {
             anchors.bottomMargin: 150
             icon.source: "Icons/destruction.svg"
             onPressed: {
-                Game.requestShoot = true;
-            }
-            onReleased: {
-                //gamearea.focus = true;
+                GameEngine.requestShoot();
             }
         }
         ControlButton {
@@ -169,11 +161,10 @@ Rectangle {
             anchors.bottomMargin: 100
             icon.source: "Icons/stat_3.svg"
             onPressed: {
-                Game.keyUp = true;
+                GameEngine.requestThrust(true);
             }
             onReleased: {
-                Game.keyUp = false;
-                //gamearea.focus = true;
+                GameEngine.requestThrust(false);
             }
         }
         ControlButton {
@@ -183,10 +174,7 @@ Rectangle {
             anchors.left: roundButtonShoot.left
             icon.source: "Icons/open_with.svg"
             onPressed: {
-                Game.requestHyperjump = true;
-            }
-            onReleased: {
-                //gamearea.focus = true;
+                GameEngine.requestHyperjump();
             }
         }
         ControlButton {
@@ -199,9 +187,6 @@ Rectangle {
             onPressed: {
                 statusUlti.activateUlti();
             }
-            onReleased: {
-                //gamearea.focus = true;
-            }
         }
     }
 
@@ -211,7 +196,7 @@ Rectangle {
         repeat: true
         running: false
         onTriggered: {
-            Game.doFastTimerLoop()
+            GameEngine.doFastTimerLoop();
             outerspace.doUpdateStatistics();
         }
     }
@@ -223,67 +208,7 @@ Rectangle {
         anchors.margins: 20
         paused: outerspace.gamePaused
         onActivatedChanged: {
-            Game.doUltiActivation(activated);
-        }
-    }
-
-    Keys.onPressed: (event)=> {
-        console.log("Outerspace - Key pressed: " + event)
-        outerspace.handleKeyPressed(event);
-        event.accepted = false;
-    }
-    Keys.onReleased: (event)=> {
-        console.log("Outerspace - Key released: " + event)
-        outerspace.handleKeyReleased(event);
-        event.accepted = false;
-    }
-
-    function handleKeyPressed(event) {
-        if (event.key === Qt.Key_P) {
-            Game.pause = !Game.pause;
-            outerspace.gamePaused = Game.pause;
-        }
-        if (event.key === Qt.Key_Left) {
-            Game.keyLeft = true;
-        }
-        if (event.key === Qt.Key_Right) {
-            Game.keyRight = true;
-        }
-        if (event.key === Qt.Key_Up) {
-            Game.keyUp = true;
-        }
-        if (event.key === Qt.Key_Space) {
-            if (!Game.keySpace && !event.isAutoRepeat)
-            {
-                Game.requestShoot = true;
-            }
-            Game.keySpace = true
-        }
-        if (event.key === Qt.Key_Down) {
-            if (!event.isAutoRepeat)
-            {
-                Game.requestHyperjump = true;
-            }
-        }
-        if (event.key === Qt.Key_Shift) {
-            if (statusUlti.fullyCharged)
-            {
-                statusUlti.activateUlti();
-            }
-        }
-    }
-    function handleKeyReleased(event) {
-        if (event.key === Qt.Key_Left) {
-            Game.keyLeft = false;
-        }
-        if (event.key === Qt.Key_Right) {
-            Game.keyRight = false;
-        }
-        if (event.key === Qt.Key_Up) {
-            Game.keyUp = false;
-        }
-        if (event.key === Qt.Key_Space) {
-             Game.keySpace = false
+            GameEngine.doUltiActivation(activated);
         }
     }
 
@@ -291,7 +216,6 @@ Rectangle {
         id: splash
         timeoutMs: 0
         anchors.centerIn: parent
-        //onSplashScreenClosed: asteroidsQml.beginGame();
     }
 
     GameOver {

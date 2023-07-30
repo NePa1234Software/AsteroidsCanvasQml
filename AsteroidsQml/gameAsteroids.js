@@ -1,5 +1,3 @@
-//import * as GameEngine from "gameEngine.js";
-
 // Space Objects
 var spaceShip = null;
 var spaceShipWrap = null;
@@ -45,7 +43,7 @@ function initGameRequest(parent)
 
     gameTimeStampMs = Date.now();
 
-    console.log("Init game request ...");
+    console.log("GAME: Init game request ...");
 
     // Init containers and create a start screen with a few asteroids
     createBulletsContainer();
@@ -66,7 +64,7 @@ function initGameRequest(parent)
 function newGameRequest(parent)
 {
     gameParent = parent;
-    console.log("New game request ...");
+    console.log("GAME: New game request ...");
     level = 1;
     lives = 3;
     score = 0;
@@ -94,8 +92,13 @@ function resetLevel()
 
 function increaseScore(object)
 {
+    if (!object?.objectState?.objectType)
+    {
+        return;
+    }
+
     var prevScore = score;
-    console.log(object.objectState.objectType + " hit - size " + object.objectState.objectSizeMultiplier);
+    //console.log("GAME: " + object.objectState.objectType + " hit - size " + object.objectState.objectSizeMultiplier);
     if (object.objectState.objectType === "asteroid")
     {
         switch(object.objectState.objectSizeMultiplier)
@@ -113,7 +116,7 @@ function increaseScore(object)
             score += 100;
             break;
         default:
-            console.log("Unexpected size!!!");
+            console.log("GAME: Unexpected size!!!");
             break;
         }
     }
@@ -176,7 +179,7 @@ function setGameArea(x,y)
 {
     gameAreaMaxX = x;
     gameAreaMaxY = y;
-    console.log("Screen size (gamearea): x/y : " + x + "/" + y);
+    console.log("GAME: Screen size (gamearea): x/y : " + x + "/" + y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,7 +297,7 @@ function createBullet( ship, cannon )
     bullet.objectState.objectSpeedX =  1000 * Math.sin(bullet.objectState.objectBearing * Math.PI/180);
     bullet.objectState.objectSpeedY = -1000 * Math.cos(bullet.objectState.objectBearing * Math.PI/180);
     bullet.objectState.objectSizeMultiplier = 50;
-    //console.log(bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
+    //console.log("GAME: " + bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
     bullet.doInit();
     bullet.doRedraw();
     bullets[bullets.length] = bullet;
@@ -407,7 +410,7 @@ function onAsteroidCollision(element)
 
 function onShipCollision(not_used)
 {
-    console.log("Ship destroyed ....");
+    console.log("GAME: Ship destroyed ....");
 
     // Nice effect of ship being destroyed
     spawnShipDebris(spaceShip);
@@ -430,7 +433,7 @@ function onShipCollision(not_used)
 
 function onAlienShipCollision(not_used)
 {
-    console.log("Alien Ship destroyed ....");
+    console.log("GAME: Alien Ship destroyed ....");
 
     // Nice effect of ship being destroyed
     spawnAsteroidDebris(alienShip);
@@ -540,9 +543,10 @@ function spawnShipDebris(ship)
 
 function doAlienShipHandling()
 {
-    if (alienShip === null) return;
+    if (!alienShip)
+        return;
 
-    if (alienShipNextActionMs === null)
+    if (!alienShipNextActionMs)
     {
         resetTimerNextAlienShipVisibility();
         initTimerNextAlienShipShoot();
@@ -608,7 +612,7 @@ function createAlienBullet()
     bullet.objectState.objectSpeedY = -tmpSpeed * Math.cos(bullet.objectState.objectBearing * Math.PI/180);
     bullet.objectState.objectSizeMultiplier = 30;
     bullet.objectState.objectLifetimeMs = 4000 + (2000 * level); // Bullet radius increase per level (limit is screen)
-    //console.log(bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
+    //console.log("GAME: " + bullet.objectState.objectType + bullets.length + " created: " + bullet.objectState.objectSpeedX + "/" + bullet.objectState.objectSpeedY);
     bullet.doInit();
     bullet.doRedraw();
     alienbullets[alienbullets.length] = bullet;
@@ -623,7 +627,7 @@ function doFastTimerLoop()
     var timeNow = Date.now();
     var millis = timeNow - gameTimeStampMs;
     gameTimeStampMs = timeNow;
-    //console.log("time = " + timeNow + ", diff = " + millis);
+    //console.log("GAME: time = " + timeNow + ", diff = " + millis);
 
     if (pause) return;
     if (spaceShip !== null)

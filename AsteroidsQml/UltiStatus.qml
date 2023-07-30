@@ -22,9 +22,9 @@ Item {
         property real  textXoffset: 0
     }
 
-    onFullyEmptyChanged: {
-        if (fullyEmpty) internal.activated = false;
-    }
+    //onFullyEmptyChanged: {
+    //    if (fullyEmpty) internal.activated = false;
+    //}
 
     onActivatedChanged: console.log("Ulti: activation changed :" + activated)
     onChargeChanged: console.log("Ulti: charge status :" + charge)
@@ -88,7 +88,7 @@ Item {
         },
         State {
             name: "EMPTY"
-            when: root.percentFull == 0
+            when: !root.charge && root.percentFull == 0
             PropertyChanges { target: fillRect; color: "red"}
         },
         State {
@@ -100,39 +100,66 @@ Item {
             name: "FULL"
             when: root.charge && !root.activated && (root.percentFull == 100)
             PropertyChanges { target: fillRect; color: "green"}
+            PropertyChanges { target: root; percentFull: 100}
         },
         State {
             name: "ACTIVATED"
-            when: root.charge && root.activated && (root.percentFull > 0)
+            when: root.charge && root.activated
             PropertyChanges { target: fillRect; color: "orange"}
         }
     ]
     transitions: [
         Transition {
             to: "CHARGING"
-            NumberAnimation {
-                target: root
-                properties: "percentFull"
-                duration: root.chargeTimeMs
-                to: 100
+            SequentialAnimation {
+                NumberAnimation {
+                    target: root
+                    properties: "percentFull"
+                    duration: root.chargeTimeMs
+                    to: 100
+                }
+                ScriptAction {
+                    script: {
+                        console.log("Ulti: fully charged");
+                        root.percentFull = 100;
+                    }
+                }
             }
         },
         Transition {
             to: "DISCHARGING"
-            NumberAnimation {
-                target: root
-                properties: "percentFull"
-                duration: root.dischargeTimeMs
-                to: 0
+            SequentialAnimation {
+                NumberAnimation {
+                    target: root
+                    properties: "percentFull"
+                    duration: root.dischargeTimeMs
+                    to: 0
+                }
+                ScriptAction {
+                    script: {
+                        console.log("Ulti: fully dicharged");
+                        root.percentFull = 0;
+                        internal.activated = false;
+                    }
+                }
             }
         },
         Transition {
             to: "ACTIVATED"
-            NumberAnimation {
-                target: root
-                properties: "percentFull"
-                duration: root.dischargeTimeMs
-                to: 0
+            SequentialAnimation {
+                NumberAnimation {
+                    target: root
+                    properties: "percentFull"
+                    duration: root.dischargeTimeMs
+                    to: 0
+                }
+                ScriptAction {
+                    script: {
+                        console.log("Ulti: fully discharged (activation false)");
+                        root.percentFull = 0;
+                        internal.activated = false;
+                    }
+                }
             }
             PropertyAnimation {
                 target: statusText

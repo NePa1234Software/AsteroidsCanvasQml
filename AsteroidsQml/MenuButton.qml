@@ -26,6 +26,7 @@ Item {
         border.color: control.color
         border.width: 2
         color: "transparent"
+        onActiveFocusChanged: console.log("MenuButton activeFocus changed ! : " + activeFocus)
 
         FontLoader {
             id: fontResource

@@ -6,14 +6,13 @@ Window {
 
     id: asteroidsGameQml
 
-    // Ensure all players get the same display
-    // Assume 16:9 ratio
     width: Screen.width
     height: Screen.height
     visible: true
-    //visibility: Window.FullScreen
-    //title: qsTr("Neils Asteroids QML (Canvas Based)")
+    visibility: Window.FullScreen
 
+    // Ensure all players get the same display
+    // Assume 16:9 ratio for now
     property real newWidth: 1920
     property real newHeight: 1032
     property real scaleWidth: width / newWidth
@@ -23,41 +22,19 @@ Window {
     onHeightChanged: logScreenSettings()
 
     // ALL keyboard activity is captured here and not forwarded to any focused item
-    // TODO This doesnt work - I want to receive ALL keyboard activity even w/o focus
-    //Keys.onPressed: (event)=> {
-    //    console.log("Window - Key pressed: " + event)
-    //    asteroidsQml.handleKeyPressed(event);
-    //    event.accepted = true;
-    //}
-    //Keys.onReleased: (event)=> {
-    //    console.log("Window - Key released: " + event)
-    //    asteroidsQml.handleKeyReleased(event);
-    //    event.accepted = true;
-    //}
+    Keys.forwardTo: asteroidsQml
 
     OuterSpace
     {
         id: asteroidsQml
+
+        // Ensure the game works on all mobile device screen sizes
+        // and browser windows etc
         width: newWidth
         height: newHeight
-        focus: true
-
-        // Ensure the game works on all mobile devices
         transform: Scale {
             xScale: scaleWidth
             yScale: scaleHeight
-        }
-
-        // ALL keyboard activity is captured here and not forwarded to any focused item
-        Keys.onPressed: (event)=> {
-            //console.log("Key pressed: " + event)
-            asteroidsQml.handleKeyPressed(event);
-            event.accepted = true;
-        }
-        Keys.onReleased: (event)=> {
-            //console.log("Key released: " + event)
-            asteroidsQml.handleKeyReleased(event);
-            event.accepted = true;
         }
     }
 

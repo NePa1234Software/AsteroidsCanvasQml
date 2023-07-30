@@ -7,18 +7,18 @@ function doResetObjectPositionToCenter(object, gameAreaMaxX, gameAreaMaxY)
     }
     object.objectState.objectPosX = gameAreaMaxX/2;
     object.objectState.objectPosY = gameAreaMaxY/2;
-    //console.log(object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
+    //console.log("GAME_ENGINE: " + object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
     object.doRedraw();
 }
 
 function doResetObjectPositionToRandomPosition(object, gameAreaMaxX, gameAreaMaxY, redraw)
 {
-    if (object === null)
+    if (!object || !object.objectState)
         return;
     object.objectState.objectPosX = getRandomSpacePosition(gameAreaMaxX, 200);
     object.objectState.objectPosY = getRandomSpacePosition(gameAreaMaxY, 200);
     object.objectState.objectBearing = 0;
-    //console.log(object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
+    //console.log("GAME_ENGINE: " + object.objectState.objectType + " (real) : x = " + object.objectState.objectPosX + ", y = " + object.objectState.objectPosY);
     if(redraw) object.doRedraw();
 }
 function getRandomSpacePosition(gameAreaMax, safeArea)
@@ -64,17 +64,17 @@ function createSpaceObject(parent, filename)
         var objectWrap = component.createObject(parent)
         if (objectWrap === null)
         {
-            console.log("Object created failed");
+            console.log("GAME_ENGINE: Object created failed");
         }
         else
         {
-            //console.log("Object created : " + objectWrap);
+            //console.log("GAME_ENGINE: Object created : " + objectWrap);
         }
         return objectWrap;
     }
     else
     {
-        console.log("Wrap object component created failed");
+        console.log("GAME_ENGINE: Wrap object component created failed");
         return null;
     }
 }
@@ -86,7 +86,7 @@ function createWrapObject(parent, filename)
     {
         parent.copyInitialProperties(objectWrap)
         //objectWrap.objectState.objectColor = "blue"
-        //console.log(objectWrap.objectState.objectType + " (wrap) : x = " + objectWrap.objectState.objectPosX + ", y = " + objectWrap.objectState.objectPosY);
+        //console.log("GAME_ENGINE: " + objectWrap.objectState.objectType + " (wrap) : x = " + objectWrap.objectState.objectPosX + ", y = " + objectWrap.objectState.objectPosY);
     }
     return objectWrap;
 }
@@ -100,7 +100,7 @@ function doWrapCoordinates(object, objectWrap, gameAreaMaxX, gameAreaMaxY)
     if (object.objectState.objectPosY >= gameAreaMaxY + limit) { object.objectState.objectPosY = object.objectState.objectPosY - gameAreaMaxY; }
     if (objectWrap === null)
     {
-        //console.log("no wrap");
+        //console.log("GAME_ENGINE: no wrap");
     }
     else
     {
