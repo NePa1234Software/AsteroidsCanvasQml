@@ -27,4 +27,5 @@ qt_add_qml_module(moduleAsteroidsQml
     Icons/destruction.svg
     Icons/open_with.svg
     Icons/star.svg
+    QML_FILES MenuButton.qml
 )

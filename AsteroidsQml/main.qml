@@ -22,16 +22,42 @@ Window {
     onWidthChanged: logScreenSettings()
     onHeightChanged: logScreenSettings()
 
+    // ALL keyboard activity is captured here and not forwarded to any focused item
+    // TODO This doesnt work - I want to receive ALL keyboard activity even w/o focus
+    //Keys.onPressed: (event)=> {
+    //    console.log("Window - Key pressed: " + event)
+    //    asteroidsQml.handleKeyPressed(event);
+    //    event.accepted = true;
+    //}
+    //Keys.onReleased: (event)=> {
+    //    console.log("Window - Key released: " + event)
+    //    asteroidsQml.handleKeyReleased(event);
+    //    event.accepted = true;
+    //}
+
     OuterSpace
     {
         id: asteroidsQml
         width: newWidth
         height: newHeight
+        focus: true
 
         // Ensure the game works on all mobile devices
         transform: Scale {
             xScale: scaleWidth
             yScale: scaleHeight
+        }
+
+        // ALL keyboard activity is captured here and not forwarded to any focused item
+        Keys.onPressed: (event)=> {
+            //console.log("Key pressed: " + event)
+            asteroidsQml.handleKeyPressed(event);
+            event.accepted = true;
+        }
+        Keys.onReleased: (event)=> {
+            //console.log("Key released: " + event)
+            asteroidsQml.handleKeyReleased(event);
+            event.accepted = true;
         }
     }
 

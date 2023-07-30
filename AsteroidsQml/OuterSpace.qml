@@ -11,6 +11,8 @@ Rectangle {
     implicitWidth: 600
     implicitHeight: 400
     property int controlTextPixelSize: 46
+    focus: true
+    onFocusChanged: console.log("Outerspace focus: " + focus)
 
     //signal newGameStarting
     property bool gameOver: true
@@ -29,7 +31,7 @@ Rectangle {
     {
         //newGameStarting();
         Game.newGameRequest(gamearea);
-        gamearea.focus = true;
+        //gamearea.focus = true;
         timer.running = true;
 
 
@@ -44,7 +46,7 @@ Rectangle {
     function togglePauseGame() {
         Game.pause = !Game.pause;
         outerspace.gamePaused = Game.pause;
-        gamearea.focus = true;
+        //gamearea.focus = true;
     }
 
     // Start the movement and game controlling
@@ -52,7 +54,7 @@ Rectangle {
     {
         Game.setGameArea(gamearea.width, gamearea.height)
         Game.initGameRequest(gamearea);
-        gamearea.focus = true;
+        //gamearea.focus = true;
         timer.running = true;
 
         //TEST gameOverText.showGameOverScreen();
@@ -75,9 +77,11 @@ Rectangle {
         width: outerspace.width
         onNewGameRequest: {
             outerspace.beginGame();
+            //gamearea.focus = true;
         }
         onPauseGameRequest: {
             outerspace.togglePauseGame();
+            //gamearea.focus = true;
         }
     }
 
@@ -90,7 +94,7 @@ Rectangle {
         color: "black"
 
         // Important that this stays true to allow game control
-        focus: true
+        //focus: true
         onFocusChanged: console.log("gamearea: focus changed - " + focus)
 
         onWidthChanged: Game.setGameArea(width, height);
@@ -125,7 +129,7 @@ Rectangle {
             }
             onReleased: {
                 Game.keyLeft = false;
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
         ControlButton {
@@ -140,7 +144,7 @@ Rectangle {
             }
             onReleased: {
                 Game.keyRight = false;
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
         ControlButton {
@@ -150,12 +154,11 @@ Rectangle {
             anchors.bottom: gamearea.bottom
             anchors.bottomMargin: 150
             icon.source: "Icons/destruction.svg"
-            focus: false
             onPressed: {
                 Game.requestShoot = true;
             }
             onReleased: {
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
         ControlButton {
@@ -170,7 +173,7 @@ Rectangle {
             }
             onReleased: {
                 Game.keyUp = false;
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
         ControlButton {
@@ -183,7 +186,7 @@ Rectangle {
                 Game.requestHyperjump = true;
             }
             onReleased: {
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
         ControlButton {
@@ -197,7 +200,7 @@ Rectangle {
                 statusUlti.activateUlti();
             }
             onReleased: {
-                gamearea.focus = true;
+                //gamearea.focus = true;
             }
         }
     }
@@ -224,66 +227,65 @@ Rectangle {
         }
     }
 
-    Keys.onPressed: (event)=>
-                    {
-                        if (event.key === Qt.Key_P) {
-                            Game.pause = !Game.pause;
-                            outerspace.gamePaused = Game.pause;
-                        }
-                        if (event.key === Qt.Key_Left) {
-                            Game.keyLeft = true;
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Right) {
-                            Game.keyRight = true;
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Up) {
-                            Game.keyUp = true;
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Space) {
-                            if (!Game.keySpace && !event.isAutoRepeat)
-                            {
-                                Game.requestShoot = true;
-                            }
-                            Game.keySpace = true
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Down) {
-                            if (!event.isAutoRepeat)
-                            {
-                                Game.requestHyperjump = true;
-                            }
-                            event.accepted = true;
-                        }
-                        if (event.key === Qt.Key_Shift) {
-                            if (statusUlti.fullyCharged)
-                            {
-                                statusUlti.activateUlti();
-                            }
-                            event.accepted = true;
-                        }
-                    }
-    Keys.onReleased: (event)=>
-                     {
-                         if (event.key === Qt.Key_Left) {
-                             Game.keyLeft = false;
-                             event.accepted = true;
-                         }
-                         if (event.key === Qt.Key_Right) {
-                             Game.keyRight = false;
-                             event.accepted = true;
-                         }
-                         if (event.key === Qt.Key_Up) {
-                             Game.keyUp = false;
-                             event.accepted = true;
-                         }
-                         if (event.key === Qt.Key_Space) {
-                             Game.keySpace = false
-                             event.accepted = true;
-                         }
-                     }
+    Keys.onPressed: (event)=> {
+        console.log("Outerspace - Key pressed: " + event)
+        outerspace.handleKeyPressed(event);
+        event.accepted = false;
+    }
+    Keys.onReleased: (event)=> {
+        console.log("Outerspace - Key released: " + event)
+        outerspace.handleKeyReleased(event);
+        event.accepted = false;
+    }
+
+    function handleKeyPressed(event) {
+        if (event.key === Qt.Key_P) {
+            Game.pause = !Game.pause;
+            outerspace.gamePaused = Game.pause;
+        }
+        if (event.key === Qt.Key_Left) {
+            Game.keyLeft = true;
+        }
+        if (event.key === Qt.Key_Right) {
+            Game.keyRight = true;
+        }
+        if (event.key === Qt.Key_Up) {
+            Game.keyUp = true;
+        }
+        if (event.key === Qt.Key_Space) {
+            if (!Game.keySpace && !event.isAutoRepeat)
+            {
+                Game.requestShoot = true;
+            }
+            Game.keySpace = true
+        }
+        if (event.key === Qt.Key_Down) {
+            if (!event.isAutoRepeat)
+            {
+                Game.requestHyperjump = true;
+            }
+        }
+        if (event.key === Qt.Key_Shift) {
+            if (statusUlti.fullyCharged)
+            {
+                statusUlti.activateUlti();
+            }
+        }
+    }
+    function handleKeyReleased(event) {
+        if (event.key === Qt.Key_Left) {
+            Game.keyLeft = false;
+        }
+        if (event.key === Qt.Key_Right) {
+            Game.keyRight = false;
+        }
+        if (event.key === Qt.Key_Up) {
+            Game.keyUp = false;
+        }
+        if (event.key === Qt.Key_Space) {
+             Game.keySpace = false
+        }
+    }
 
     AsteroidsSplashScreen {
         id: splash
