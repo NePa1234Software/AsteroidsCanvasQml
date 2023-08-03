@@ -21,9 +21,6 @@ Window {
     onWidthChanged: logScreenSettings()
     onHeightChanged: logScreenSettings()
 
-    // ALL keyboard activity is captured here and not forwarded to any focused item
-    Keys.forwardTo: asteroidsQml
-
     OuterSpace
     {
         id: asteroidsQml

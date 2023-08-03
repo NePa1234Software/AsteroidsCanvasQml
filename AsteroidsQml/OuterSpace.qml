@@ -22,7 +22,6 @@ Rectangle {
 
     KeyboardHandler {
         id: keyHandler
-        focus: true
         gamePaused: false
         onUltiActivationRequest: {
             statusUlti.activateUlti();

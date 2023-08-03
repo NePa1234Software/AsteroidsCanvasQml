@@ -8,7 +8,7 @@ Item {
     property alias text: contentText.text
     property alias font: contentText.font
     property color color: "yellow"
-    property real margins: 10
+    property real margins: 12
 
     implicitWidth: contentButton.implicitWidth
     implicitHeight: contentButton.implicitHeight
@@ -24,7 +24,7 @@ Item {
         implicitHeight: contentText.contentHeight + 2 * control.margins
         radius: control.margins
         border.color: control.color
-        border.width: 2
+        border.width: 3
         color: "transparent"
         onActiveFocusChanged: console.log("MenuButton activeFocus changed ! : " + activeFocus)
 
@@ -38,7 +38,7 @@ Item {
             font.family: fontResource.font.family
             font.weight: 1000 // 400 default (range 1 to 1000)
             font.letterSpacing: 1
-            font.pixelSize: 24
+            font.pixelSize: 48
             anchors.centerIn: parent
             color: control.color
         }
@@ -48,9 +48,11 @@ Item {
             anchors.fill: parent
 
             onPressed: {
+                console.log("Menu Button - pressed")
                 control.pressed()
             }
             onReleased: {
+                console.log("Menu Button - released")
                 control.released()
                 control.clicked()
             }

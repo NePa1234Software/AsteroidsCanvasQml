@@ -17,8 +17,8 @@ Item {
     Rectangle
     {
         id: contentButton
-        implicitWidth: 120
-        implicitHeight: 120
+        implicitWidth: 140
+        implicitHeight: 140
         radius: width/2
         border.color: control.color
         border.width: 1
@@ -43,9 +43,11 @@ Item {
             anchors.fill: parent
 
             onPressed: {
+                console.log("Control Button - pressed")
                 control.pressed()
             }
             onReleased: {
+                console.log("Control Button - released")
                 control.released()
             }
         }
