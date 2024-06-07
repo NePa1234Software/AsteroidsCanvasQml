@@ -17,6 +17,7 @@ Item {
     Rectangle
     {
         id: contentButton
+
         implicitWidth: 140
         implicitHeight: 140
         radius: width/2
@@ -38,18 +39,17 @@ Item {
             antialiasing: true
         }
 
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-
-            onPressed: {
-                console.log("Control Button - pressed")
-                control.pressed()
-            }
-            onReleased: {
-                console.log("Control Button - released")
-                control.released()
+        TapHandler {
+            onPressedChanged: {
+                if (pressed) {
+                    console.log("Control Button - pressed")
+                    control.pressed()
+                } else {
+                    console.log("Control Button - released")
+                    control.released()
+                }
             }
         }
+
     }
 }
