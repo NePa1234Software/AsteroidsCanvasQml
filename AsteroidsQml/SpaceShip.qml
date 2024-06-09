@@ -82,7 +82,7 @@ SpaceObject {
         weaponType: "basic"
         cannonList: [
             CannonInterface {
-                r_y: -objectState.objectHalfWidth
+                r_y: -spaceShip.objectState.objectHalfWidth
                 cannonDamage: 1
                 cannonPoweredUp: true
             }

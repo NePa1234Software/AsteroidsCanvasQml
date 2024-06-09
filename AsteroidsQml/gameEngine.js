@@ -1,3 +1,5 @@
+// .pragma library
+
 function doResetObjectPositionToCenter(object, gameAreaMaxX, gameAreaMaxY)
 {
     if (object === null)
@@ -59,7 +61,13 @@ function limitMinMax(valueIn, minValue, maxValue)
 function createSpaceObject(parent, filename)
 {
     var component = Qt.createComponent(filename);
-    if (component.status === Component.Ready)
+    if (!component)
+    {
+        console.log("GAME_ENGINE: Wrap object component created failed:", filename);
+        return null;
+    }
+
+    if (component.status == Component.Ready)
     {
         var objectWrap = component.createObject(parent)
         if (objectWrap === null)
@@ -71,11 +79,6 @@ function createSpaceObject(parent, filename)
             //console.log("GAME_ENGINE: Object created : " + objectWrap);
         }
         return objectWrap;
-    }
-    else
-    {
-        console.log("GAME_ENGINE: Wrap object component created failed");
-        return null;
     }
 }
 

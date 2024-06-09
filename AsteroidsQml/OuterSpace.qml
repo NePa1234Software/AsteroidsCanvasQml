@@ -98,14 +98,8 @@ Rectangle {
 
         TestArea  {}
 
-        FontLoader {
-            id: fontResource
-            source: "Fonts/Vectorb.ttf"
-        }
-
         Label
         {
-            id: statisticsLabel
             text: outerspace.statistics
             color: "yellow"
             anchors.top: gamearea.top
@@ -118,53 +112,39 @@ Rectangle {
             anchors.left: gamearea.left
             anchors.leftMargin: 100
             anchors.bottom: gamearea.bottom
-            anchors.bottomMargin: 100
+            anchors.bottomMargin: 150
             icon.source: "Icons/arrow_back.svg"
-            onPressed: {
-                GameEngine.rotateLeft(true);
-            }
-            onReleased: {
-                GameEngine.rotateLeft(false);
-            }
+            onPressed: GameEngine.rotateLeft(true)
+            onReleased: GameEngine.rotateLeft(false)
         }
         ControlButton {
             id: roundButtonRight
             anchors.left: roundButtonLeft.right
             anchors.leftMargin: 50
             anchors.bottom: gamearea.bottom
-            anchors.bottomMargin: 100
+            anchors.bottomMargin: 150
             icon.source: "Icons/arrow_forward.svg"
-            onPressed: {
-                GameEngine.rotateRight(true);
-            }
-            onReleased: {
-                GameEngine.rotateRight(false);
-            }
+            onPressed: GameEngine.rotateRight(true)
+            onReleased: GameEngine.rotateRight(false)
         }
         ControlButton {
             id: roundButtonShoot
             anchors.right: gamearea.right
-            anchors.rightMargin: 50
+            anchors.rightMargin: 100
             anchors.bottom: gamearea.bottom
             anchors.bottomMargin: 150
             icon.source: "Icons/destruction.svg"
-            onPressed: {
-                GameEngine.requestShoot();
-            }
+            onPressed: GameEngine.requestShoot()
         }
         ControlButton {
             id: roundButtonThrust
             anchors.right: roundButtonShoot.left
-            anchors.rightMargin: 50
+            anchors.rightMargin: 100
             anchors.bottom: gamearea.bottom
             anchors.bottomMargin: 100
             icon.source: "Icons/stat_3.svg"
-            onPressed: {
-                GameEngine.requestThrust(true);
-            }
-            onReleased: {
-                GameEngine.requestThrust(false);
-            }
+            onPressed: GameEngine.requestThrust(true)
+            onReleased: GameEngine.requestThrust(false)
         }
         ControlButton {
             id: roundButtonHyperspace
@@ -172,9 +152,7 @@ Rectangle {
             anchors.bottomMargin: 100
             anchors.left: roundButtonShoot.left
             icon.source: "Icons/open_with.svg"
-            onPressed: {
-                GameEngine.requestHyperjump();
-            }
+            onPressed: GameEngine.requestHyperjump()
         }
         ControlButton {
             id: roundButtonUlti
@@ -183,9 +161,7 @@ Rectangle {
             anchors.bottomMargin: 100
             anchors.left: roundButtonThrust.left
             icon.source: "Icons/star.svg"
-            onPressed: {
-                statusUlti.activateUlti();
-            }
+            onPressed: statusUlti.activateUlti()
         }
     }
 

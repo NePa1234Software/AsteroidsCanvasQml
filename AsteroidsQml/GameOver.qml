@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 
@@ -12,7 +14,7 @@ Item {
     {
         console.log("Game Over closed...")
         control.visible = false
-        gameOverScreenClosed();
+        control.gameOverScreenClosed();
     }
     function showGameOverScreen()
     {
@@ -73,22 +75,22 @@ Item {
         model: control.visible ? internal.numParts : 0
         Text {
             id: textLetter
-
+            required property int index
             property int letterIndex: index
             property string letter: internal.gameOverParts[index].s
             property real letterPos: internal.gameOverParts[index].pos * internal.letterWidth
-            property var startPos: Qt.point(internal.gameAreaWidth, 0)
-            property var middlePos: Qt.point(internal.gameAreaWidth/2 - internal.messageWidth/2 + letterPos, internal.gameAreaHeight/2 - 80)
-            property var endPos: Qt.point(0 - internal.letterWidth, 0)
+            property point startPos: Qt.point(internal.gameAreaWidth, 0)
+            property point middlePos: Qt.point(internal.gameAreaWidth/2 - internal.messageWidth/2 + letterPos, internal.gameAreaHeight/2 - 80)
+            property point endPos: Qt.point(0 - internal.letterWidth, 0)
             property real flyAwayAngle: Math.random() * 360.0
             property real flyAwayTime: 3000 + Math.random() * 2000
-            x: endPos.x
-            y: endPos.y
+            x: textLetter.endPos.x
+            y: textLetter.endPos.y
             font.family: fontResource.font.family
             font.weight: 1000 // 400 default (range 1 to 1000)
             //font.letterSpacing:
             font.pixelSize: 80
-            text: letter
+            text: textLetter.letter
             color: "yellow"
 
             state: "init"
@@ -96,22 +98,22 @@ Item {
                 State {
                     name: "init"
                     PropertyChanges {
-                        textLetter.x: startPos.x
-                        textLetter.y: startPos.y
+                        textLetter.x: textLetter.startPos.x
+                        textLetter.y: textLetter.startPos.y
                     }
                 },
                 State {
                     name: "flyin"
                     PropertyChanges {
-                        textLetter.x: middlePos.x
-                        textLetter.y: middlePos.y
+                        textLetter.x: textLetter.middlePos.x
+                        textLetter.y: textLetter.middlePos.y
                     }
                 },
                 State {
                     name: "flyout"
                     PropertyChanges {
-                        textLetter.x: endPos.x
-                        textLetter.y: endPos.y
+                        textLetter.x: textLetter.endPos.x
+                        textLetter.y: textLetter.endPos.y
                     }
                 }
             ]
@@ -120,11 +122,11 @@ Item {
                     to: "flyin"
                     SequentialAnimation {
                         PauseAnimation {
-                            duration: 2000 + index * 100
+                            duration: 2000 + textLetter.letterIndex * 100
                         }
                         ScriptAction {
                             script: {
-                                console.log(letter + " - Starting gameover flyin anim: ", startPos, middlePos, endPos)
+                                console.log(textLetter.letter + " - Starting gameover flying anim: ", textLetter.startPos.toString(), textLetter.middlePos.toString(), textLetter.endPos.toString())
                             }
                         }
                         ParallelAnimation {
@@ -134,16 +136,16 @@ Item {
                                 properties: "x"
                                 duration: 1200
                                 easing.type: Easing.Linear
-                                from: startPos.x
-                                to: middlePos.x
+                                from: textLetter.startPos.x
+                                to: textLetter.middlePos.x
                             }
                             PropertyAnimation {
                                 target: textLetter
                                 properties: "y"
                                 duration: 1200
                                 easing.type: Easing.OutBounce
-                                from: startPos.y
-                                to: middlePos.y
+                                from: textLetter.startPos.y
+                                to: textLetter.middlePos.y
                             }
                         }
                     }
@@ -152,29 +154,29 @@ Item {
                     to: "flyout"
                     ScriptAction {
                         script: {
-                            console.log(letter + " - Starting gameover flyout angle/time: " + flyAwayAngle, flyAwayTime)
+                            console.log(textLetter.letter + " - Starting gameover flyout angle/time: " + textLetter.flyAwayAngle, textLetter.flyAwayTime)
                         }
                     }
                     ParallelAnimation {
                         PropertyAnimation {
                             target: textLetter
                             properties: "x"
-                            duration: flyAwayTime
+                            duration: textLetter.flyAwayTime
                             easing.type: Easing.OutQuad
-                            from: middlePos.x
-                            to: middlePos.x + internal.gameAreaWidth * Math.cos(flyAwayAngle * 2*Math.PI / 360.0)
+                            from: textLetter.middlePos.x
+                            to: textLetter.middlePos.x + internal.gameAreaWidth * Math.cos(textLetter.flyAwayAngle * 2*Math.PI / 360.0)
                         }
                         PropertyAnimation {
                             target: textLetter
                             properties: "y"
-                            duration: flyAwayTime
+                            duration: textLetter.flyAwayTime
                             easing.type: Easing.OutQuad
-                            from: middlePos.y
-                            to: middlePos.y - internal.gameAreaWidth * Math.sin(flyAwayAngle * 2*Math.PI / 360.0)
+                            from: textLetter.middlePos.y
+                            to: textLetter.middlePos.y - internal.gameAreaWidth * Math.sin(textLetter.flyAwayAngle * 2*Math.PI / 360.0)
                         }
                         RotationAnimation {
                             target: textLetter
-                            duration: flyAwayTime
+                            duration: textLetter.flyAwayTime
                             from: 0
                             to: Math.random() > 0.5 ? 720 : -720
                         }
@@ -187,13 +189,13 @@ Item {
                 running: false
                 repeat: false
                 onTriggered: {
-                    state = "flyout";
+                    textLetter.state = "flyout";
                 }
             }
 
             Component.onCompleted: {
                 console.log(letter + " - init state: " + state + " index: " + index)
-                letterIndex = index;
+                textLetter.letterIndex = index;
                 state = "flyin";
 
                 // Ensure flyout is synchronous for all letters
@@ -208,7 +210,7 @@ Item {
         running: false
         repeat: false
         onTriggered: {
-            closeGameOverScreen();
+            control.closeGameOverScreen();
         }
     }
 

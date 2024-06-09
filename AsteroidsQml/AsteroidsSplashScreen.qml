@@ -50,7 +50,7 @@ Item {
     }
     Timer {
         interval: control.timeoutMs
-        running: timeoutMs != 0
+        running: control.timeoutMs != 0
         triggeredOnStart: true
         repeat: false
         onTriggered: {

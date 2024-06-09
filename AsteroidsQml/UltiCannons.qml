@@ -21,7 +21,7 @@ SpaceObject {
     // line coloring and width is already set
     onDrawObjectSignal: (ctx)=>
     {
-        var h = objectState.objectHalfWidth;
+        var h = ultiCannons.objectState.objectHalfWidth;
         var w = h/2;
 
         // ulti
@@ -65,31 +65,31 @@ SpaceObject {
         cannonList: [
             CannonInterface {
                 r_y: 0
-                r_x: objectState.objectHalfWidth/2 + 5
+                r_x: ultiCannons.objectState.objectHalfWidth/2 + 5
                 r_angle: 2
                 cannonDamage: 2
-                cannonPoweredUp: ultiActivated
+                cannonPoweredUp: ultiCannons.ultiActivated
             },
             CannonInterface {
                 r_y: 0
-                r_x: -objectState.objectHalfWidth/2 - 5
+                r_x: -ultiCannons.objectState.objectHalfWidth/2 - 5
                 r_angle: -2
                 cannonDamage: 2
-                cannonPoweredUp: ultiActivated
+                cannonPoweredUp: ultiCannons.ultiActivated
             },
             CannonInterface {
-                r_y: objectState.objectHalfWidth
-                r_x: objectState.objectHalfWidth/2 +5
+                r_y: ultiCannons.objectState.objectHalfWidth
+                r_x: ultiCannons.objectState.objectHalfWidth/2 +5
                 r_angle: 178
                 cannonDamage: 1
-                cannonPoweredUp: ultiActivated
+                cannonPoweredUp: ultiCannons.ultiActivated
             },
             CannonInterface {
-                r_y: objectState.objectHalfWidth
-                r_x: -objectState.objectHalfWidth/2 -5
+                r_y: ultiCannons.objectState.objectHalfWidth
+                r_x: -ultiCannons.objectState.objectHalfWidth/2 -5
                 r_angle: 182
                 cannonDamage: 1
-                cannonPoweredUp: ultiActivated
+                cannonPoweredUp: ultiCannons.ultiActivated
             }
         ]
     }

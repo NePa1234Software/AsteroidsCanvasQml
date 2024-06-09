@@ -58,7 +58,7 @@ Item {
             color: toolBar.color
             onClicked: {
                 console.log("New game requested")
-                newGameRequest();
+                toolBar.newGameRequest();
             }
         }
         MenuButton {
@@ -69,7 +69,7 @@ Item {
             color: toolBar.color
             onClicked: {
                 console.log("Pause requested")
-                pauseGameRequest();
+                toolBar.pauseGameRequest();
             }
         }
 

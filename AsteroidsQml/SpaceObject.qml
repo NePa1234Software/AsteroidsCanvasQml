@@ -7,7 +7,7 @@ Item {
     // Common states for all object
     property alias objectState: objectStateBase
 
-    visible: !objectState.objectHidden
+    visible: !object.objectState.objectHidden
 
     // Base canvas object can be read but not overwritten
     readonly property alias objectImage: objectImageBase
@@ -19,11 +19,11 @@ Item {
 
     // Called after object creation - overwritten by specialized object
     function doInit() {
-        doInitBase();
+        object.doInitBase();
     }
 
     function doInitBase() {
-        objectState.objectInitialised = true;
+        object.objectState.objectInitialised = true;
     }
 
     // Called after doInit and when a redraw is to be forced
@@ -58,18 +58,18 @@ Item {
     // The image needs to be drawn specifically using the onDrawObjectSignal
     Canvas {
         id: objectImageBase
-        rotation: objectState.objectBearing
-        scale: objectState.objectScale
+        rotation: object.objectState.objectBearing
+        scale: object.objectState.objectScale
         visible: true // objectType === "base"
-        width:  (objectState.objectSizePixelMultiplied) * 2
-        height: (objectState.objectSizePixelMultiplied) * 2
-        x: objectState.objectPosX - (objectState.objectSizePixelMultiplied)
-        y: objectState.objectPosY - (objectState.objectSizePixelMultiplied)
+        width:  (object.objectState.objectSizePixelMultiplied) * 2
+        height: (object.objectState.objectSizePixelMultiplied) * 2
+        x: object.objectState.objectPosX - (object.objectState.objectSizePixelMultiplied)
+        y: object.objectState.objectPosY - (object.objectState.objectSizePixelMultiplied)
         antialiasing: true
 
         onPaint: {
-            if (!objectState.objectInitialised) {
-                doInit();
+            if (!object.objectState.objectInitialised) {
+                object.doInit();
             }
 
             //console.log("onPaint called")
@@ -79,19 +79,19 @@ Item {
             ctx.clearRect(0, 0, width, height);
 
             // Default coloring and line width for all spaceObject
-            ctx.strokeStyle = objectState.objectColor;
-            ctx.fillStyle = objectState.objectFillColor;
+            ctx.strokeStyle = object.objectState.objectColor;
+            ctx.fillStyle = object.objectState.objectFillColor;
             ctx.lineWidth = 2;
 
             // Origin is the middle of the canvas
-            ctx.translate(objectState.objectSizePixelMultiplied,
-                          objectState.objectSizePixelMultiplied);
+            ctx.translate(object.objectState.objectSizePixelMultiplied,
+                          object.objectState.objectSizePixelMultiplied);
 
             // Visualize the center for testing
             //ctx.fillRect(-2,-2,4,4);
 
             // Draw the specific object
-            drawObjectSignal(ctx);
+            object.drawObjectSignal(ctx);
 
             ctx.restore();
         }

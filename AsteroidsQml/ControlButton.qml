@@ -6,7 +6,7 @@ Item {
     id: control
 
     property alias icon: contentIcon
-    property color color: "yellow"
+    property color color: "orange"
 
     implicitWidth: contentButton.implicitWidth
     implicitHeight: contentButton.implicitHeight
@@ -17,7 +17,7 @@ Item {
     Rectangle
     {
         id: contentButton
-
+        anchors.fill: parent
         implicitWidth: 140
         implicitHeight: 140
         radius: width/2
@@ -39,9 +39,10 @@ Item {
             antialiasing: true
         }
 
-        TapHandler {
-            onPressedChanged: {
-                if (pressed) {
+        PointHandler {
+            margin: -20
+            onActiveChanged: {
+                if (active) {
                     console.log("Control Button - pressed")
                     control.pressed()
                 } else {
