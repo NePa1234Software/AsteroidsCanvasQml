@@ -24,7 +24,7 @@ SpaceObject {
     objectState.objectFillColor: "lightgrey"
 
     // Function is overwritten from base
-    function copyDynamicProperties(target)
+    function copyDynamicProperties(target : SpaceShip)
     {
         copyDynamicPropertiesBase(target);
         target.shipThrust = shipThrust;

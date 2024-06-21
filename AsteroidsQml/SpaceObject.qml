@@ -32,23 +32,23 @@ Item {
     }
 
     // This is called just once to clone the object
-    function copyInitialProperties(target)
+    function copyInitialProperties(target : SpaceObject)
     {
         copyInitialPropertiesBase(target);
     }
 
-    function copyInitialPropertiesBase(target)
+    function copyInitialPropertiesBase(target : SpaceObject)
     {
         object.objectState.copyInitialStateProperties(target.objectState)
     }
 
     // This is called to clone the dynamic properties that change during game
     // overwrite this fpr specific properties
-    function copyDynamicProperties(target)
+    function copyDynamicProperties(target : SpaceObject)
     {
         object.objectState.copySpeedBearingStateProperties(target.objectState);
     }
-    function copyDynamicPropertiesBase(target)
+    function copyDynamicPropertiesBase(target : SpaceObject)
     {
         object.objectState.copySpeedBearingStateProperties(target.objectState)
     }

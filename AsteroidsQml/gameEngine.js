@@ -1,4 +1,6 @@
-// .pragma library
+.pragma library
+
+.import QtQuick 2.0 as QtQuickModuleImportedInJS
 
 function doResetObjectPositionToCenter(object, gameAreaMaxX, gameAreaMaxY)
 {
@@ -67,7 +69,7 @@ function createSpaceObject(parent, filename)
         return null;
     }
 
-    if (component.status == Component.Ready)
+    if (component.status == QtQuickModuleImportedInJS.Component.Ready)
     {
         var objectWrap = component.createObject(parent)
         if (objectWrap === null)

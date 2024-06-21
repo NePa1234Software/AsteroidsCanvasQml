@@ -13,7 +13,7 @@ SpaceObject {
     objectState.objectLifetimeMs: 8000
 
     // Function is overwritten from base
-    function copyDynamicProperties(target)
+    function copyDynamicProperties(target : Debris)
     {
         copyDynamicPropertiesBase(target);
     }

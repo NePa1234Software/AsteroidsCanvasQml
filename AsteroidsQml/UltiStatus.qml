@@ -8,7 +8,7 @@ Item {
     property int dischargeTimeMs: 5000
     property int innerMargin: 2
     property bool paused: false
-    onPausedChanged: console.log("Ulti: Paused")
+    // onPausedChanged: console.log("Ulti: Paused")
     property bool charge: false
 
     readonly property bool activated: internal.activated
@@ -26,13 +26,13 @@ Item {
     //    if (fullyEmpty) internal.activated = false;
     //}
 
-    onActivatedChanged: console.log("Ulti: activation changed :" + activated)
-    onChargeChanged: console.log("Ulti: charge status :" + charge)
+    // onActivatedChanged: console.log("Ulti: activation changed :" + activated)
+    // onChargeChanged: console.log("Ulti: charge status :" + charge)
 
     implicitHeight: 50
     implicitWidth: 200
     state: "EMPTY"
-    onStateChanged: console.log("Ulti: state changed :" + state)
+    // onStateChanged: console.log("Ulti: state changed :" + state)
 
     function activateUlti()
     {
@@ -120,7 +120,7 @@ Item {
                 }
                 ScriptAction {
                     script: {
-                        console.log("Ulti: fully charged");
+                        // console.log("Ulti: fully charged");
                         root.percentFull = 100;
                     }
                 }
@@ -137,7 +137,7 @@ Item {
                 }
                 ScriptAction {
                     script: {
-                        console.log("Ulti: fully dicharged");
+                        // console.log("Ulti: fully dicharged");
                         root.percentFull = 0;
                         internal.activated = false;
                     }
@@ -155,7 +155,7 @@ Item {
                 }
                 ScriptAction {
                     script: {
-                        console.log("Ulti: fully discharged (activation false)");
+                        // console.log("Ulti: fully discharged (activation false)");
                         root.percentFull = 0;
                         internal.activated = false;
                     }

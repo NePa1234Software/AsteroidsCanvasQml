@@ -16,8 +16,8 @@ Rectangle {
     property string statistics: "Statistics:"
 
     focus: true
-    onFocusChanged: console.log("Outerspace focus changed ! : " + focus)
-    onActiveFocusChanged: console.log("Outerspace activeFocus changed ! : " + activeFocus)
+    // onFocusChanged: console.log("Outerspace focus changed ! : " + focus)
+    // onActiveFocusChanged: console.log("Outerspace activeFocus changed ! : " + activeFocus)
     Keys.forwardTo: [keyHandler,gamearea,statusBar]
 
     KeyboardHandler {
@@ -74,7 +74,7 @@ Rectangle {
         anchors.top: outerspace.top
         anchors.left: outerspace.left
         width: outerspace.width
-        onActiveFocusChanged: console.log("PlayerStatusBar activeFocus changed ! : " + activeFocus)
+        // onActiveFocusChanged: console.log("PlayerStatusBar activeFocus changed ! : " + activeFocus)
         onNewGameRequest: {
             outerspace.beginGame();
         }
@@ -91,7 +91,7 @@ Rectangle {
         anchors.bottom: outerspace.bottom
         color: "black"
 
-        onFocusChanged: console.log("gamearea focus changed ! : " + focus)
+        // onFocusChanged: console.log("gamearea focus changed ! : " + focus)
 
         onWidthChanged: GameEngine.setGameArea(width, height);
         onHeightChanged: GameEngine.setGameArea(width, height);

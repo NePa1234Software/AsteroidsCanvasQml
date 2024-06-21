@@ -15,7 +15,7 @@ SpaceObject {
 
     // TODO make this QtObject
     property int numPoints : 12
-    property var points : null
+    property var points : []
 
     // Called after object creation
     function doInit() {
@@ -24,37 +24,40 @@ SpaceObject {
     }
 
     // This is called just once to clone the object
-    function copyInitialProperties(target)
+    function copyInitialProperties(target : SpaceObject)
     {
         copyInitialPropertiesBase(target);
-        target.points = null;
-        target.points = new Array(numPoints);
-        for (var ii = 0; ii < numPoints; ii++)
+        if ( !(target instanceof Asteroid) ) {
+            return;
+        }
+        (target as Asteroid).points = [];
+        (target as Asteroid).points = new Array(asteroid.numPoints);
+        for (var ii = 0; ii < asteroid.numPoints; ii++)
         {
-            target.points[ii] = points[ii];
+            (target as Asteroid).points[ii] = asteroid.points[ii];
         }
     }
 
     // This is called just once to clone the object
-    function copyDynamicProperties(target)
+    function copyDynamicProperties(target : Asteroid)
     {
         copyDynamicPropertiesBase(target);
     }
 
     function createAsteroid()
     {
-        if (points !== null)
+        if (asteroid.points == undefined)
         {
             console.log("This mustn't happen!!!");
             return;
         }
 
-        var k = objectState.objectHalfWidth;
+        var k = asteroid.objectState.objectHalfWidth;
 
-        points = new Array(numPoints);
-        for (var ii = 0; ii < numPoints; ii++) {
+        asteroid.points = new Array(asteroid.numPoints);
+        for (var ii = 0; ii < asteroid.numPoints; ii++) {
             var radius2 = k - Math.random() * k/2;
-            var angleRadians = Math.PI * (ii/numPoints) * 360 / 180
+            var angleRadians = Math.PI * (ii/asteroid.numPoints) * 360 / 180
             points[ii] = { x: radius2 * Math.cos(angleRadians),
                            y: radius2 * Math.sin(angleRadians) };
         }
@@ -68,7 +71,7 @@ SpaceObject {
         // Asteroid
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
-        for (var ii = 1; ii < numPoints; ii++)
+        for (var ii = 1; ii < asteroid.numPoints; ii++)
         {
           ctx.lineTo(points[ii].x,points[ii].y);
         }

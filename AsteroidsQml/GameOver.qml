@@ -126,7 +126,7 @@ Item {
                         }
                         ScriptAction {
                             script: {
-                                console.log(textLetter.letter + " - Starting gameover flying anim: ", textLetter.startPos.toString(), textLetter.middlePos.toString(), textLetter.endPos.toString())
+                                // console.log(textLetter.letter + " - Starting gameover flying anim: ", textLetter.startPos.toString(), textLetter.middlePos.toString(), textLetter.endPos.toString())
                             }
                         }
                         ParallelAnimation {
@@ -154,7 +154,7 @@ Item {
                     to: "flyout"
                     ScriptAction {
                         script: {
-                            console.log(textLetter.letter + " - Starting gameover flyout angle/time: " + textLetter.flyAwayAngle, textLetter.flyAwayTime)
+                            // console.log(textLetter.letter + " - Starting gameover flyout angle/time: " + textLetter.flyAwayAngle, textLetter.flyAwayTime)
                         }
                     }
                     ParallelAnimation {
@@ -194,7 +194,7 @@ Item {
             }
 
             Component.onCompleted: {
-                console.log(letter + " - init state: " + state + " index: " + index)
+                // console.log(letter + " - init state: " + state + " index: " + index)
                 textLetter.letterIndex = index;
                 state = "flyin";
 

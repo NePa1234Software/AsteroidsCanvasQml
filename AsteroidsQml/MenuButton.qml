@@ -48,11 +48,11 @@ Item {
             anchors.fill: parent
 
             onPressed: {
-                console.log("Menu Button - pressed")
+                // console.log("Menu Button - pressed")
                 control.pressed()
             }
             onReleased: {
-                console.log("Menu Button - released")
+                // console.log("Menu Button - released")
                 control.released()
                 control.clicked()
             }

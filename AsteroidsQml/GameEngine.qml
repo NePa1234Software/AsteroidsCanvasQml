@@ -8,13 +8,13 @@ import "gameAsteroids.js" as Game
 Item {
     id: gameEngine
 
-    function gameOver() { return Game.gameOver }
-    function paused() { return Game.pause }
+    function gameOver() : bool { return Game.isGameOver() }
+    function paused() : bool { return Game.pause }
     function togglePaused() { Game.pause = !Game.pause }
-    function level() { return Game.level }
-    function lives() { return Game.lives }
-    function score() { return Game.score }
-    function getStatistics() { return Game.getStatistics() }
+    function level() : int { return Game.level }
+    function lives() : int { return Game.lives }
+    function score() : int { return Game.score }
+    function getStatistics() : string { return Game.getStatistics() }
     function doFastTimerLoop() { Game.doFastTimerLoop() }
 
     function rotateLeft(val) { Game.keyLeft = val }
@@ -24,8 +24,11 @@ Item {
     function requestHyperjump() { Game.requestHyperjump = true }
     function doUltiActivation(val) { Game.doUltiActivation(val) }
 
-    function newGameRequest(owner) { Game.newGameRequest(owner); }
+    function newGameRequest(owner : Item) { Game.newGameRequest(owner); }
     function setGameArea(w, h) { Game.setGameArea(w, h); }
 
-    function initGameRequest(owner) { Game.initGameRequest(owner); }
+    function initGameRequest(owner) {
+        console.log("GAME: Init game request ...");
+        Game.initGameRequest(owner);
+    }
 }

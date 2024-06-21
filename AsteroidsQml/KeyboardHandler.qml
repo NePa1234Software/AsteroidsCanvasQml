@@ -14,16 +14,16 @@ FocusScope {
     }
 
     focus: true
-    onActiveFocusChanged: console.log("KeyHandler activeFocus changed ! : " + activeFocus)
+    // onActiveFocusChanged: console.log("KeyHandler activeFocus changed ! : " + activeFocus)
 
     // ALL keyboard activity is captured here and not forwarded to any focused item
     Keys.onPressed: (event)=> {
-        console.log("KeyHandler - Key pressed: " + event.key, event.isAutoRepeat )
+        // console.log("KeyHandler - Key pressed: " + event.key, event.isAutoRepeat )
         handleKeyPressed(event);
         event.accepted = true;
     }
     Keys.onReleased: (event)=> {
-        console.log("KeyHandler - Key released: " + event.key, event.isAutoRepeat)
+        // console.log("KeyHandler - Key released: " + event.key, event.isAutoRepeat)
         handleKeyReleased(event);
         event.accepted = true;
     }
@@ -56,11 +56,11 @@ FocusScope {
             internal.requestShoot = true;
         }
         if (event.key === Qt.Key_Down) {
-            console.log("KeyHandler - Hyperjump request")
+            // console.log("KeyHandler - Hyperjump request")
             GameEngine.requestHyperjump();
         }
         if (event.key === Qt.Key_Shift) {
-            console.log("KeyHandler - Ulti request")
+            // console.log("KeyHandler - Ulti request")
             ultiActivationRequest();
         }
     }
@@ -80,8 +80,8 @@ FocusScope {
         }
     }
     Component.onCompleted: {
-        console.log("KeyHandler activeFocus init ! : " + activeFocus)
+        // console.log("KeyHandler activeFocus init ! : " + activeFocus)
         forceActiveFocus();
-        console.log("KeyHandler activeFocus init2 ! : " + activeFocus)
+        // console.log("KeyHandler activeFocus init2 ! : " + activeFocus)
     }
 }

@@ -43,10 +43,10 @@ Item {
             margin: -20
             onActiveChanged: {
                 if (active) {
-                    console.log("Control Button - pressed")
+                    // console.log("Control Button - pressed")
                     control.pressed()
                 } else {
-                    console.log("Control Button - released")
+                    // console.log("Control Button - released")
                     control.released()
                 }
             }

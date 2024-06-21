@@ -1,3 +1,7 @@
+.pragma library
+
+.import "gameEngine.js" as GameEngine
+
 // Space Objects
 var spaceShip = null;
 var spaceShipWrap = null;
@@ -28,10 +32,12 @@ var requestHyperjump = false;
 var level = 1;
 var score = 0;
 var lives = 3;
-var gameOver = true
-var pause = false
+var gameOver = true;
+var pause = false;
 
 var gameTimeStampMs = 0;
+
+function isGameOver() { return gameOver; }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Init
@@ -42,8 +48,6 @@ function initGameRequest(parent)
     gameParent = parent;
 
     gameTimeStampMs = Date.now();
-
-    console.log("GAME: Init game request ...");
 
     // Init containers and create a start screen with a few asteroids
     createBulletsContainer();
