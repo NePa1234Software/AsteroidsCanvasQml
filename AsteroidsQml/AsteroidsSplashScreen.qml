@@ -35,12 +35,12 @@ Item {
             id: content
             anchors.centerIn: parent
             text:
-                  "<h1><b>AsteroidsCanvasQML (V 1.3) </b></h1>" +
+                  "<h1><b>AsteroidsCanvasQML (V 1.4) </b></h1>" +
                   "<h1><b> Author: Neil Parker</b></h1>" +
                   "<br>" +
                   "<h1>Welcome to my very first QML Game !!!</h1>\n" +
                   "<h1> This game is build purely with the QML Framework (QtQuick)</h1>" +
-                  "<h1><i> Powered by the AMAZING QT Framework</i></h1>" +
+                  "<h1><i> Powered by the AMAZING Qt Framework</i></h1>" +
                   "<h1><i> (https://www.qt.io/)</i></h1>" +
                   "<br>" +
                   "<h2> Controls: UP to thrust, LEFT, RIGHT, SPACE to Fire</h2>" +

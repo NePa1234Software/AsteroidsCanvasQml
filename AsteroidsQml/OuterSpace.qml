@@ -96,6 +96,11 @@ Rectangle {
         onWidthChanged: GameEngine.setGameArea(width, height);
         onHeightChanged: GameEngine.setGameArea(width, height);
 
+        SpaceParticalSystem {
+            id: spaceParticalSystem
+            anchors.fill: gamearea
+        }
+
         TestArea  {}
 
         Label

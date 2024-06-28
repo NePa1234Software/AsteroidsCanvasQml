@@ -17,6 +17,9 @@ if(EMSCRIPTEN)
     target_link_options(appAsteroidsQml PUBLIC -sASYNCIFY -Os)
 endif()
 
+# add QML_FORCE_DISK_CACHE=1 to speed up debug execution. Be aware that QML breakpoints will then no longer work.
+target_compile_definitions(appAsteroidsQml PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+
 # -----------------------------------------------------------
 # installation using windeployqt
 # cd <build folder>

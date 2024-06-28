@@ -25,7 +25,7 @@ qt_add_qml_module(moduleAsteroidsQml
     SpaceShip.qml Debris.qml Bullet.qml SpaceObject.qml ObjectState.qml
     AlienShip.qml UltiStatus.qml UltiCannons.qml WeaponInterface.qml CannonInterface.qml
     gameEngine.js gameAsteroids.js ControlButton.qml
-    MenuButton.qml KeyboardHandler.qml
+    MenuButton.qml KeyboardHandler.qml SpaceParticalSystem.qml
 
     RESOURCES
     Fonts/Vectorb.ttf

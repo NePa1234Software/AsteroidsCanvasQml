@@ -8,6 +8,8 @@ import "gameAsteroids.js" as Game
 Item {
     id: gameEngine
 
+    property SpaceParticalSystem spaceParticalSystem
+
     function gameOver() : bool { return Game.isGameOver() }
     function paused() : bool { return Game.pause }
     function togglePaused() { Game.pause = !Game.pause }
@@ -30,5 +32,9 @@ Item {
     function initGameRequest(owner) {
         console.log("GAME: Init game request ...");
         Game.initGameRequest(owner);
+    }
+
+    QtObject {
+        id: internal
     }
 }

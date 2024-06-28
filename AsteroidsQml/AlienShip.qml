@@ -1,5 +1,6 @@
 import QtQuick
 import QtQml
+import QtQuick.Particles
 
 SpaceObject {
 
@@ -58,4 +59,45 @@ SpaceObject {
         ]
     }
 
+    ParticleSystem { id: sys }
+
+    ImageParticle {
+        system: sys
+        groups: ["effects"]
+        source: "qrc:///particleresources/fuzzydot.png"
+        color: objectState.objectColor
+        colorVariation: 0.3
+        entryEffect: ImageParticle.None
+        z: spaceShip.z - 2
+    }
+
+    Emitter {
+        system: sys
+        enabled: spaceShip.visible
+        group: "effects"
+        transform: [
+            Translate {
+                x: objectState.objectHalfWidth - 2
+                y: 2
+            },
+            Rotation {
+                angle: spaceShip.objectState.objectBearing
+            },
+            Translate {
+                x: spaceShip.objectState.objectPosX
+                y: spaceShip.objectState.objectPosY
+            }
+        ]
+        NumberAnimation on emitRate { from: 0; to: 500; duration: 2000; loops: Animation.Infinite }
+        lifeSpan: 200
+        lifeSpanVariation: 200
+        size: 10
+        endSize: 5
+        velocity: AngleDirection {
+            angle: 0
+            angleVariation: 15;
+            magnitude: 150
+            magnitudeVariation: 100
+        }
+    }
 }

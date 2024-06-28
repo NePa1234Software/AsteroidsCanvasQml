@@ -1,5 +1,6 @@
 import QtQuick
 import QtQml
+import QtQuick.Particles
 
 SpaceObject {
 
@@ -14,8 +15,6 @@ SpaceObject {
 
     property WeaponInterface weapons: weaponImplBasic
     property WeaponInterface weaponsUlti: ultiCannons.weapons
-
-    onShipThrustChanged: doRedraw()
 
     // Specialization of base object
     objectState.objectType: "spaceShip"
@@ -43,12 +42,6 @@ SpaceObject {
         var j = 2;
 
         ctx.globalCompositeOperation = "copy";
-
-        // Rear thrust
-        if (shipThrust) {
-            ctx.fillStyle = "red";
-            ctx.fillRect(-10,h-10,20,20);
-        }
 
         // Ship
         ctx.fillStyle = objectState.objectFillColor;
@@ -99,5 +92,50 @@ SpaceObject {
         objectState.objectHidden: spaceShip.objectState.objectHidden || !spaceShip.ultiActivated
         ultiActivated: spaceShip.ultiActivated
         z: spaceShip.z - 1
+    }
+
+    ParticleSystem { id: sys }
+
+    ImageParticle {
+        system: sys
+        groups: ["effects"]
+        source: "qrc:///particleresources/glowdot.png"
+        color: "red"
+        colorVariation: 0.2
+        entryEffect: ImageParticle.None
+        z: spaceShip.z - 2
+    }
+
+    Emitter {
+        system: sys
+        enabled: spaceShip.shipThrust
+        group: "effects"
+        transform: [
+            Translate {
+                y: 20
+            },
+            Rotation {
+                angle: spaceShip.objectState.objectBearing
+                // origin {
+                //     x: spaceShip.objectState.objectPosX
+                //     y: spaceShip.objectState.objectPosY
+                // }
+            },
+            Translate {
+                x: spaceShip.objectState.objectPosX
+                y: spaceShip.objectState.objectPosY
+            }
+        ]
+        emitRate: 1000
+        lifeSpan: 200
+        lifeSpanVariation: 100
+        size: 20
+        endSize: 10
+        velocity: AngleDirection {
+            angle: spaceShip.objectState.objectBearing + 90
+            angleVariation: 10;
+            magnitude: 400
+            magnitudeVariation: 50
+        }
     }
 }
