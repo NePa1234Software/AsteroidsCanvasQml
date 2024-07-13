@@ -30,6 +30,12 @@ Here is an overview of all QML Item (control classes/widgets) and links to learn
 - https://doc.qt.io/qt-6/qtquick-index.html
 - https://doc.qt.io/qt-6/qmltypes.html
 
+# Licensing
+See the license file and License Folder for details
+- The game is build using the Qt Framework opensource version (https://www.qt.io/licensing/)
+- The vector battle font is provided from dafont (https://www.dafont.com/vector-battle.font)
+- WebAssembly build powered by emscription SDK (https://emscripten.org/docs/introducing_emscripten/emscripten_license.html)
+
 # Idea 
 To learn something you need to read a lot - and more importantly you need to practice even more !!
 
