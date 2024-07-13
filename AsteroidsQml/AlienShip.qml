@@ -65,7 +65,7 @@ SpaceObject {
         system: sys
         groups: ["effects"]
         source: "qrc:///particleresources/fuzzydot.png"
-        color: objectState.objectColor
+        color: spaceShip.objectState.objectColor
         colorVariation: 0.3
         entryEffect: ImageParticle.None
         z: spaceShip.z - 2
@@ -77,7 +77,7 @@ SpaceObject {
         group: "effects"
         transform: [
             Translate {
-                x: objectState.objectHalfWidth - 2
+                x: spaceShip.objectState.objectHalfWidth - 2
                 y: 2
             },
             Rotation {

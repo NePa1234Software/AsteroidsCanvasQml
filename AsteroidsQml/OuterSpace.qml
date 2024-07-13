@@ -52,7 +52,6 @@ Rectangle {
     // Start the movement and game controlling
     function initGame()
     {
-        GameEngine.initGameRequest(gamearea);
         GameEngine.setGameArea(gamearea.width, gamearea.height);
         timer.running = true;
 
@@ -93,8 +92,8 @@ Rectangle {
 
         // onFocusChanged: console.log("gamearea focus changed ! : " + focus)
 
-        onWidthChanged: GameEngine.setGameArea(width, height);
-        onHeightChanged: GameEngine.setGameArea(width, height);
+        onWidthChanged: GameEngine.setGameArea(gamearea.width, gamearea.height);
+        onHeightChanged: GameEngine.setGameArea(gamearea.width, gamearea.height);
 
         SpaceParticalSystem {
             id: spaceParticalSystem
@@ -188,7 +187,7 @@ Rectangle {
         anchors.margins: 20
         paused: outerspace.gamePaused
         onActivatedChanged: {
-            GameEngine.doUltiActivation(activated);
+            GameEngine.doUltiActivation(statusUlti.activated);
         }
     }
 

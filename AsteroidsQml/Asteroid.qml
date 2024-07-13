@@ -58,8 +58,8 @@ SpaceObject {
         for (var ii = 0; ii < asteroid.numPoints; ii++) {
             var radius2 = k - Math.random() * k/2;
             var angleRadians = Math.PI * (ii/asteroid.numPoints) * 360 / 180
-            points[ii] = { x: radius2 * Math.cos(angleRadians),
-                           y: radius2 * Math.sin(angleRadians) };
+            asteroid.points[ii] = { x: radius2 * Math.cos(angleRadians),
+                                    y: radius2 * Math.sin(angleRadians) };
         }
     }
 

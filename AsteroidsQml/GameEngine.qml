@@ -19,22 +19,22 @@ Item {
     function getStatistics() : string { return Game.getStatistics() }
     function doFastTimerLoop() { Game.doFastTimerLoop() }
 
-    function rotateLeft(val) { Game.keyLeft = val }
-    function rotateRight(val) { Game.keyRight = val }
+    function rotateLeft(val : bool) { Game.keyLeft = val }
+    function rotateRight(val : bool) { Game.keyRight = val }
     function requestShoot() { Game.requestShoot = true }
-    function requestThrust(val) { Game.keyUp = val }
+    function requestThrust(val : bool) { Game.keyUp = val }
     function requestHyperjump() { Game.requestHyperjump = true }
-    function doUltiActivation(val) { Game.doUltiActivation(val) }
+    function doUltiActivation(val : bool) { Game.doUltiActivation(val) }
 
     function newGameRequest(owner : Item) { Game.newGameRequest(owner); }
-    function setGameArea(w, h) { Game.setGameArea(w, h); }
-
-    function initGameRequest(owner) {
-        console.log("GAME: Init game request ...");
-        Game.initGameRequest(owner);
-    }
+    function setGameArea(w : real, h : real) { Game.setGameArea(w, h); }
 
     QtObject {
         id: internal
+    }
+
+    Component.onCompleted: {
+        console.log("GAME: Init game request ...");
+        Game.initGameRequest(gameEngine);
     }
 }

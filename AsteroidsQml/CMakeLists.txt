@@ -8,6 +8,7 @@ if(EMSCRIPTEN)
     target_link_options(moduleAsteroidsQml PUBLIC -sASYNCIFY -Os)
 endif()
 
+# https://doc.qt.io/qt-6/qtqml-qml-script-compiler.html
 set_target_properties(moduleAsteroidsQml PROPERTIES
     QT_QMLCACHEGEN_ARGUMENTS "--verbose"
 )
