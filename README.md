@@ -4,7 +4,7 @@
 Asteroids retro game written solely for me (and you) to learn the QML (expecially the Canvas Item).
 
 Currently I am learning Qt Quick / QML from the amazing Qt Company. 
-I plan to add some better graphic and feature as my expertise grows. I have recently added my first particle effect (-: 
+I plan to add some better graphic and feature as my expertise grows. I have recently had fun adding some nice particle effects (-: 
 
 Project is currently built against Qt 6.7 and Emscription SDK 3.1.50 and tested with Windows 11, Android Phone and of coarse WebAssembly (which is used in the Play Online link below).
 
