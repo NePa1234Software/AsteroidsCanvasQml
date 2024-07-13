@@ -1,18 +1,17 @@
 # AsteroidsCanvasQml
 
-<img src="docs/Recording_AsteroidsCanvasQML_2023-06-23 204138.gif" width="640" height="360">
+<img src="docs/Screen_Recording_v1_5_ 2024-07-13.gif" width="640" height="360">
 Asteroids retro game written solely for me (and you) to learn the QML (expecially the Canvas Item).
 
-Currently I am learning QML (from the amazing Qt Framework). 
-I plan to add some better graphic to practice more Canvas API. An installer or at least a portable deploy will come. 
-When I learn other graphical modules I plan to clone this project to cleary differentiate the concepts.
+Currently I am learning Qt Quick / QML from the amazing Qt Company. 
+I plan to add some better graphic and feature as my expertise grows. I have recently added my first particle effect (-: 
 
-Project was built against Qt 6.5. 
+Project is currently built against Qt 6.7 and Emscription SDK 3.1.50 and tested with Windows 11, Android Phone and of coarse WebAssembly (which is used in the Play Online link below). 
 
-Author: Neil Parker
+Author: Neil Parker, Senior Software Developer
 
-Play Online
-https://nepa1234software.github.io/AsteroidsCanvasQml-WebAssembly/appAsteroidsQml.html
+# Play Online
+WASM multithreaded (TODO / Broken) - https://nepa1234software.github.io/AsteroidsCanvasQml-WebAssembly/appAsteroidsQml.html
 
 # Qt
 Qt is available either as a commercial or opensource license. I am using the opensource license and have thus chosen the GPL version for this code as well. 
