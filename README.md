@@ -13,9 +13,11 @@ Author: Neil Parker, Senior Software Developer
 # Play Online
 WASM singlethreaded (should work!)
 - https://nepa1234software.github.io/AsteroidsCanvasQml-WebAssembly-SingleThreaded/appAsteroidsQml.html
+- CODE - https://github.com/NePa1234Software/AsteroidsCanvasQml-WebAssembly-SingleThreaded
 
 WASM multithreaded (TODO / Broken)
 - https://nepa1234software.github.io/AsteroidsCanvasQml-WebAssembly/appAsteroidsQml.html
+- CODE - https://github.com/NePa1234Software/AsteroidsCanvasQml-WebAssembly
 
 # Qt
 Qt is available either as a commercial or opensource license. I am using the opensource license and have thus also chosen the GPL licensing version for this code as well. 
